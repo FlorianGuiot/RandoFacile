@@ -8,7 +8,7 @@
 
 class panier{
 
-    private array $panier;
+    private array $panier = array();
 
 
     /**

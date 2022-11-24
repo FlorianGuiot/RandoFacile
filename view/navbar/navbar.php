@@ -122,10 +122,10 @@ $recherche = '';
                     <div class="dropdown">
                             <button type="button" id="dropdownMenuPanier" class="panier-button dropdown-toggle" style="color:white;" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <img class="panier-button-img" src="img/panier.png">
-                                <p  id="panierUtilisateurNb" class="panier-texte-nombre"><?php echo $_SESSION['panier_nbArticles'];?></p>
+                                <p  id="panierUtilisateurNb" class="panier-texte-nombre <?php echo $_SESSION['panier_nbArticlesVisible'] ?> "><?php echo $_SESSION['panier_nbArticles'];?></p>
                             </button>
 
-                            <div id="panierUtilisateur" class="dropdown-menu overflow-auto" aria-labelledby="dropdownMenuPanier">
+                            <div id="panierUtilisateur" class="dropdown-menu" aria-labelledby="dropdownMenuPanier">
                                 <?php
                                     echo $_SESSION['panier_liste'];
                                 ?>
@@ -133,7 +133,7 @@ $recherche = '';
 
                     </div>
             </div>
-        </div>
+            </div>
         
     </div>
 </div>

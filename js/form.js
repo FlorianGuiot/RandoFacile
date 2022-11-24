@@ -189,7 +189,6 @@ function validationConnexion(){
 
 function disconnect(){
 
-    
 
 
         
@@ -378,7 +377,7 @@ function validationInscription(etape){
                     data:{email:email,password:password,confpassword:confPassword},
                     success:function(response){
                         
-                        if(response != ""){
+                        if(response != " "){
 
                             var msg = "";
                         
@@ -452,7 +451,7 @@ function validationInscription(etape){
 
                         console.log(response);
 
-                        if(response != ""){
+                        if(response != " "){
 
                             var msg = "";
                             
@@ -595,8 +594,8 @@ function CommentaireInfo(){
                 type:'post',
                 data:{commentaire:commentaire,idProduit:idProduit,note:note},
                 success:function(response){
-
-                    if(response == ""){
+                    
+                    if(response == " "){
                         
                         //Rechargement de la page
                         location.reload();
@@ -707,7 +706,7 @@ function editButtonCommentaire(){
                     data:{commentaire:commentaire,id:id},
                     success:function(response){
 
-                        if(response == ""){
+                        if(response == " "){
 
                             $('#modal_vide').modal('toggle');
                             //Modification du commentaire
@@ -790,7 +789,7 @@ function DeleteButtonCommentaire(){
                 data:{id:id},
                 success:function(response){
 
-                    if(response == ""){
+                    if(response == " "){
 
                         $('#modal_vide').modal('toggle');
                         //Suppression du commentaire
@@ -810,6 +809,7 @@ function DeleteButtonCommentaire(){
             });
 
         }, false);
+
 
         
         
@@ -833,6 +833,7 @@ function GetAddPanierInfo(){
         let qteMax = parseInt($("#qteProduit").attr('max'));
         let qteMin= parseInt($("#qteProduit").attr('min'));
 
+
         if((qte >= qteMax) || (qte < qteMin) ){
 
            
@@ -841,9 +842,23 @@ function GetAddPanierInfo(){
         }else{
 
             //Ajoute le produit au panier
-            AddPanier(idProduit,qte);
+            AddPanier(idProduit,qte,false);
 
         }
+        
+
+    });
+
+    //Change la valeur d'une quantité dans le panier
+    $( qteProduitLignePanier ).on("change",function(event){
+        event.preventDefault();
+
+        //Retrouve le commentaire associé 
+        let parent = $(event.target).parent().parent().parent().parent();
+
+        //Récupère l'id du produit
+        let id = $(parent).attr('id');
+        
         
 
     });
@@ -852,7 +867,7 @@ function GetAddPanierInfo(){
 
 
 //Ajoute le produit dans le panier 
-function AddPanier(idProduit,qte){
+function AddPanier(idProduit,qte,modification){
 
 
     const sucessText =  '<div class="row">'+
@@ -879,7 +894,7 @@ function AddPanier(idProduit,qte){
         success:function(response){
             
             if(response == 1){
-
+                
                 // Met à jour l'affichage du panier       
                 $.ajax({
                     url:'index.php?controller=Panier&action=AffichagePanier',
@@ -887,14 +902,22 @@ function AddPanier(idProduit,qte){
                     dataType: 'json',
                     success:function(data){
                         
-                        $("#panierUtilisateur").html(data[0]); //Met à jour le contenue
-                        $("#panierUtilisateurNb").html(data[1]); //Met à jour le contenue
+                        if(modification == false){
 
-                        //Affiche la modal 
-                        $('#modal_vide').modal('show');
-                        $("#titre_modal").html('');
-                        $("#contenu_modal").html(sucessText);
-                        $("#footer_modal").html("");
+                            $("#panierUtilisateur").html(data[0]); //Met à jour le contenue
+                            $("#panierUtilisateurNb").html(data[1]); //Met à jour le contenue
+
+                            if($("#panierUtilisateurNb").hasClass("d-none")){
+                                $("#panierUtilisateurNb").removeClass("d-none");
+                            }
+                            
+                            //Affiche la modal 
+                            $('#modal_vide').modal('show');
+                            $("#titre_modal").html('');
+                            $("#contenu_modal").html(sucessText);
+                            $("#footer_modal").html("");
+
+                        }
                     }
                 });
 
@@ -919,12 +942,12 @@ function AddPanier(idProduit,qte){
 function init(){
     validationConnexion();
     validationInscription(1);
+    CheckStarsRating();
+    CommentaireInfo();
     InscriptionInfo();
     editButtonCommentaire();
     DeleteButtonCommentaire();
     GetAddPanierInfo();
-    CheckStarsRating();
-    CommentaireInfo();
 }
 
 function initInscription(){

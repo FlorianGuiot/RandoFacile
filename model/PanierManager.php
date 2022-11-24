@@ -32,7 +32,7 @@ class PanierManager {
 
         }
 
-        $lePanier = array();
+        $lePanier = new panier();
 
         // Récupération des commentaires.
         $sql = "select idProduit,qte,DateAjout FROM Panier WHERE idUser = :id";
@@ -41,12 +41,8 @@ class PanierManager {
         $resultPanier->execute();
 
         while($result_panier=$resultPanier->fetch()){
-
-            array_push($lePanier, [
-                                    'produit' => ProduitsManager::getProduitParId($result_panier['idProduit']),
-                                    'qte' => $result_panier['qte']
-
-                                    ]);
+            
+            $lePanier->AddProduit(ProduitsManager::getProduitParId($result_panier['idProduit']), $result_panier['qte']);
 
         }
         

@@ -7,11 +7,11 @@ class PanierController{
      * GetPanier()
      * Retourne le panier de l'utilisateur dans un tableau associatif : Produit, Quantité
      * 
-     * @return array
+     * @return panier
      */
     public static function GetPanier(){
 
-        $panier = array();
+        $panier = new panier();
 
         //Si l'utilisateur est connecté -> on récupère le panier en base de donnée
         if(isset($_SESSION['iduser'])){
@@ -35,15 +35,20 @@ class PanierController{
      * 
      * @return string
      */
-    public static function GetAffichagePanier(array $panier){
+    public static function GetAffichagePanier(panier $panier){
 
 
         $html = '<div class="d-flex justify-content-center m-2"><button id="BtnVoirLePanier" class="btn btn-primary">Voir le panier</button></div>'. 
-                '<div class="d-flex justify-content-center"><p>Total : '.self::GetPrixPanier($panier).' €</p></div>';
+                '<div class="d-flex justify-content-center"><p>Total : '.$panier->GetPrixTotal().' €</p></div>';
 
-        foreach($panier as $unP){
+        foreach($panier->GetPanier() as $unP){
             
-            $html .= '<a class="dropdown-item" href="#"><img height="40" src="'.$unP['produit']->GetLiensImage()[0].'"> '.$unP['produit']->GetLibelle().'</a>';
+            $html .= '<div id="'.$unP['produit']->GetId().'"><a class="dropdown-item lignePanier" href="#"><img height="40" src="'.$unP['produit']->GetLiensImage()[0].'"> '.$unP['produit']->GetLibelle().
+            '<div class="row mt-1">'.
+            '<div class="col-4">'.
+            '<input  id="qteProduitLignePanier" type="number"  class="form-control qteProduitLignePanier" value="'.$unP['qte'].'" max="'.$unP['produit']->GetQteEnStock().'" min="1">'.
+            '</div>'.
+            '</div></a></div>';
 
         }
         
@@ -62,61 +67,13 @@ class PanierController{
         $lePanier = self::GetPanier(); //Le panier de l'utilisateur
 
         $panierInfo = array();
-        array_push($panierInfo, self::GetAffichagePanier(self::GetPanier($lePanier))); //Le panier au format html
-        array_push($panierInfo, self::GetNbrProduitsPanier($lePanier)); //Le nombre de produit dans le panier
+
+        array_push($panierInfo, self::GetAffichagePanier($lePanier)); //Le panier au format html
+        array_push($panierInfo, $lePanier->GetNbrProduits()); //Le nombre de produit dans le panier
 
         echo json_encode($panierInfo);
 
     }
-
-
-    /**
-     * GetNbrProduitPanier($panier)
-     * Retourne le nombre de produit dans le panier (sans prendre compte de la quantité)
-     * 
-     * @return int
-     */
-    public static function GetNbrProduitsPanier(array $panier){
-        
-        return count($panier);
-
-    }
-
-
-    /**
-     * EstDansLePanier($panier, $produit)
-     * Retourne true si le produit mis en parametre se trouve dans le panier de l'utilisateur
-     * 
-     * @return bool
-     */
-    public static function EstDansLePanier(array $panier, $produit){
-
-        $estDansLePanier = false;
-
-        return $estDansLePanier;
-
-    }
-
-    /**
-     * GetPrixPanier($panier)
-     * Retourne le cout total du panier en float
-     * 
-     * @return float
-     */
-    public static function GetPrixPanier(array $panier){
-        
-        $total = 0;
-
-        foreach($panier as $unP){
-
-            $total += $unP['produit']->CalculerMontant($unP['qte']);
-
-        }
-
-        return $total;
-
-    }
-
 
 
     /**

@@ -17,7 +17,9 @@ session_start();
 require_once __DIR__.'/controller/PanierController.php';
 $lePanier = PanierController::GetPanier();
 $_SESSION['panier_liste'] = PanierController::GetAffichagePanier($lePanier);
-$_SESSION['panier_nbArticles'] = PanierController::GetNbrProduitsPanier($lePanier);
+$_SESSION['panier_nbArticles'] = $lePanier->GetNbrProduits();
+
+if($_SESSION['panier_nbArticles'] > 0){ $_SESSION['panier_nbArticlesVisible'] = ""; } else{ $_SESSION['panier_nbArticlesVisible'] = "d-none"; }
 
 
 

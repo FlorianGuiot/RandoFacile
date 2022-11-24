@@ -182,7 +182,7 @@ class ProduitController{
 
                     //Post le commentaire en BDD
                     $estAdd = ProduitsManager::AddCommentaire($user,$ipUser,DbManager::nettoyer($_POST["commentaire"]),$dateDuJour,DbManager::nettoyer($_POST["idProduit"]),$_POST['note']);
-
+                    
                     if(!$estAdd){
                         $erreur = "Un problème est survenu lors de l'ajout du commentaire.";
                     }
@@ -281,17 +281,18 @@ class ProduitController{
 
                 //Supprime le commentaire
                 $estSuppr = ProduitsManager::SupprimerCommentaire($_POST['id']);
+                
             }
 
         }
         
-        $erreur = '';
+        $erreur = "";
         
         if(!$estSuppr){
             $erreur = 'Un problème est survenu lors de la suppression du commentaire.';
         }
 
-        return $erreur;
+        echo $erreur;
 
     }
 

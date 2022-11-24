@@ -672,7 +672,7 @@ class ProduitsManager {
 
         }
 
-        $estSuppr = false;
+        $estSuppr = true;
 
         //Date de suppression
         $date = new DateTime();
@@ -688,7 +688,7 @@ class ProduitsManager {
 
         }catch(PDOException $e){
 
-            $estSuppr = true;
+            $estSuppr = false;
         }
 
 
