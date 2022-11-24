@@ -104,7 +104,7 @@ if($page['produitExiste'] == true){
                             '<div class="row mb-3 d-flex justify-content-center">'.
                             '<label for="inputEmail3" class="col-5 col-form-label">Quantité </label>'.
                             '<div class="col-4">'.
-                            '<input type="number" id="qteProduit" class="form-control" value="1" max="'.$produit->GetQteEnStock().'" min="1" id="inputEmail3">'.
+                            '<input type="number" id="qteProduit" class="form-control" value="1" max="'.$produit->GetQteEnStock().'" min="1">'.
                             '</div>'.
                             '<small id="qteHelp" class="form-text text-muted"></small>'.
                             '</div>'.
