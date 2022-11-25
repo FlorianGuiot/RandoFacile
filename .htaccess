@@ -1,0 +1,17 @@
+# Turn rewrite engine on
+Options +FollowSymlinks
+RewriteEngine on
+
+# map neat URL to internal URL
+RewriteRule ^recherche/categorie/([0-9]+)/$   index.php?controller=Recherche&action=read&idCateg=$1 [nc,qsa]
+
+
+# RewriteRule ^connexion/$   index.php?action=authentification [nc]
+# RewriteRule ^personne/insert/$   index.php?action=ajoutPersonne [nc]
+# RewriteRule ^mesCoVoiturages/([0-9]+)/$   index.php?data=mesCoVoiturages&idPers=$1 [nc,qsa]
+# RewriteRule ^coVoiturage/delete/([0-9]+)/$   index.php?idCoVoit=$1 [nc,qsa]
+# RewriteRule ^mesCoVoiturages/evenement/([0-9]+)/$   index.php?data=coVoituragesEvent&idEvent=$1 [nc,qsa]
+# RewriteRule ^coVoiturages/$   index.php?data=coVoiturages [nc]
+# RewriteRule ^evenements/$   index.php?data=evenement [nc]
+# RewriteRule ^evenements/futurs/$   index.php?data=evenementFuturs [nc]
+# RewriteRule ^personne/([0-9]+)/$   index.php?data=personne&idPers=$1 [nc,qsa]

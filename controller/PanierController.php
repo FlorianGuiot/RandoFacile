@@ -5,7 +5,7 @@ class PanierController{
 
     /**
      * GetPanier()
-     * Retourne le panier de l'utilisateur dans un tableau associatif : Produit, Quantité
+     * Retourne le panier de l'utilisateur 
      * 
      * @return panier
      */
@@ -21,6 +21,7 @@ class PanierController{
 
         } //Si l'utilisateur est déconnecté -> on récupère le panier depuis les cookies
         else{
+
 
 
         }
@@ -39,7 +40,7 @@ class PanierController{
 
 
         $html = '<div class="d-flex justify-content-center m-2"><button id="BtnVoirLePanier" class="btn btn-primary">Voir le panier</button></div>'. 
-                '<div class="d-flex justify-content-center"><p>Total : '.$panier->GetPrixTotal().' €</p></div>';
+                '<div class="d-flex justify-content-center"><p>Total : '.$panier->GetPrixTotal().' €</p></div> <div class="panier-container">';
 
         foreach($panier->GetPanier() as $unP){
             
@@ -52,6 +53,7 @@ class PanierController{
 
         }
         
+        $html .= "</div>";
 
         return $html;
     }

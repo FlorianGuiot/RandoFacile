@@ -25,7 +25,7 @@
 </div>
 
 <!--Articles ordinateur-->
-<div class="container p-2 ">
+<div class="container pt-2">
 
     <div class="row">
 
@@ -37,7 +37,7 @@ foreach($lesNouveautés as $unProduit){
 ?>
 
         <div class="col-xxl-3 col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs-12">
-            <div class="card text-center mx-auto shadow-lg bg-white rounded card-taille">
+            <div class="card text-center mx-auto shadow-lg bg-white rounded card-taille w-100">
                 <a href=""><?php echo "<img class='card-img-top' src= '".$unProduit->GetLiensImage()[0]."'>";?></a>
                 <div class="card-body">
                     <a href="" class="lien-article"><h5 class="card-title">
@@ -45,7 +45,7 @@ foreach($lesNouveautés as $unProduit){
                             echo $unProduit->GetLibelle();
                         ?>
                     </h5></a>
-                    <p class="card-text">
+                    <p class="" style='font-size:13px'>
                         <?php
                             echo $unProduit->GetResume();
                         ?>

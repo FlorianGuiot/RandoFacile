@@ -105,10 +105,36 @@ body{
 }
 
 
-.dropdown-menu {
-    max-height: 600px !important;
+.panier-container {
+    max-height: 500px !important;
     overflow-y: auto !important;
 }
+
+.page-link{
+    background-color: #ffffff !important;
+    color:#1c3816 !important;
+}
+
+.page-link:hover {
+    color: #467f3a !important;
+    background-color: #e9ecef !important;
+    border-color: #dee2e6 !important;
+  }
+
+.page-link:focus {
+    color: #467f3a !important;
+    background-color: #e9ecef !important;
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25) !important;
+  }
+  
+  .page-item:not(:first-child) .page-link {
+    margin-left: -1px;
+  }
+  .page-item.active .page-link {
+    color: #fff !important;
+    background-color: #467f3a !important;
+    border-color: #467f3a !important;
+  }
 
 /*
 ================================
