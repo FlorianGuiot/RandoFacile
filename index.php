@@ -22,7 +22,6 @@ $_SESSION['panier_nbArticles'] = $lePanier->GetNbrProduits();
 if($_SESSION['panier_nbArticles'] > 0){ $_SESSION['panier_nbArticlesVisible'] = ""; } else{ $_SESSION['panier_nbArticlesVisible'] = "d-none"; }
 
 
-
 /*
 ====================================
 Récupération des paramètres de l'URL

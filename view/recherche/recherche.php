@@ -20,6 +20,9 @@ if(count($lesProduits) < 1){
 
     foreach($lesProduits as $unProduit){
 
+        $nbrCommentaires = ProduitsManager::getNbrCommentaires($unProduit);
+        $nbrNotes = ProduitsManager::getNbrNotes($unProduit);
+
         // Lien du produit
         $lienProduit = "./index?controller=Produit&action=read&idProduit=".$unProduit->GetId(); 
 
@@ -53,12 +56,14 @@ if(count($lesProduits) < 1){
                         <?php
 
                             echo $unProduit->GetCategorie()->GetLibelle();
+                            
 
                         ?>
                     </p>
                     <p class="prix">
                     <?php
-                            echo $unProduit->GetPrixUnitaire()." €";
+                            echo "<div class='row'><span class='fs-5'>".$unProduit->GetPrixUnitaire()." € </span></div>";
+                            echo "<div class='row'><div class='col-12'><span class='rating_checked'>".$unProduit->GetNoteMoyenne()." </span>" ."<span class='fa fa-star rating_checked'></span><span class='nbComments'>(" . $nbrNotes ."<span class='fa fa-star'></span>, ". $nbrCommentaires ."<span class='fa fa-message'></span> )</span></div></div>";
                         ?> 
                     </p>
                 </div>

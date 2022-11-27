@@ -22,7 +22,14 @@ class PanierController{
         } //Si l'utilisateur est déconnecté -> on récupère le panier depuis les cookies
         else{
 
+            if(isset($_COOKIE['panier'])){
 
+                foreach($_COOKIE['panier'] as $LigneP){
+                    echo $LigneP;
+                }
+            }else{
+              
+            }
 
         }
 
@@ -43,6 +50,7 @@ class PanierController{
                 '<div class="d-flex justify-content-center"><p>Total : '.$panier->GetPrixTotal().' €</p></div> <div class="panier-container">';
 
         foreach($panier->GetPanier() as $unP){
+            
             
             $html .= '<div id="'.$unP['produit']->GetId().'"><a class="dropdown-item lignePanier" href="#"><img height="40" src="'.$unP['produit']->GetLiensImage()[0].'"> '.$unP['produit']->GetLibelle().
             '<div class="row mt-1">'.
@@ -103,9 +111,11 @@ class PanierController{
         date_default_timezone_set('Europe/Paris');
         $dateDuJour = date('Y-m-d H:i:s', time()); //Date de l'ajout dans le panier
         
+        
         //Si l'utilisateur est connecté -> on ajoute le panier en base de donnée
         if(isset($_SESSION['iduser'])){
 
+            
             $produit = ProduitsManager::getProduitParId($_POST['idProduit']);
 
             $add = PanierManager::AddPanier($produit,$_POST['qte'],$_SESSION['iduser'],$dateDuJour);
@@ -113,7 +123,24 @@ class PanierController{
 
         } //Si l'utilisateur est déconnecté -> on ajoute le panier dans les cookies
         else{
+           
+            $nbrLignes = 0;
 
+            if(isset($_COOKIE['panier'])){
+
+                $nbrLignes = count($_COOKIE['panier']);
+
+            }
+
+            $lignePanier = [
+                                'produit' => $_POST['idProduit'],
+                                'qte' => $_POST['qte']
+
+                            ];
+
+            setcookie("panier[".$nbrLignes."]",$lignePanier);
+
+            $add = true;
 
         }
         
@@ -121,7 +148,7 @@ class PanierController{
         //Ajax ne peut recevoir de booleen, on remplace la valeur par un 1 ou un 0
         $retour = 0;
 
-        if($add = true){
+        if($add == true){
 
             $retour = 1;
         }

@@ -57,7 +57,7 @@ if($page['produitExiste'] == true){
                     <h3 class="fs-3 text"><?php echo $produit->GetLibelle() ?></h3>
                 </div>
                 <div class="col-6">
-                    <p><?php echo '<span class="rating_checked">'.$produit->GetNoteMoyenne().' </span>' . '<span class="fa fa-star rating_checked"></span> <span class="nbComments">(' . count($lesCommentaireWithNotes) .'<span class="fa fa-star"></span>, '. count($lesCommentaires) .'<span class="fa fa-message"></span> )</span>' ?></p>
+                    <p><?php echo '<span class="rating_checked">'.$produit->GetNoteMoyenne().' </span>' . '<span class="fa fa-star rating_checked"></span> <span class="nbComments">(' . $produit->GetNbrNotes() .'<span class="fa fa-star"></span>, '. count($produit->GetLesCommentaires()) .'<span class="fa fa-message"></span> )</span>' ?></p>
                 </div>
             </div>
 
@@ -166,50 +166,50 @@ if($page['produitExiste'] == true){
             }
 
             //Affichage des commentaires
-            if(count($lesCommentaires) < 1){
+            if(count($produit->GetLesCommentaires()) < 1){
 
                 echo "<p>Aucun avis sur cet article.</p>";
 
             }
             else{
 
-                echo "<p>".count($lesCommentaires)." avis sur cet article.</p>";
+                echo "<p>".count($produit->GetLesCommentaires())." avis sur cet article.</p>";
 
 
                 for($i = 0; $i <= $params['limiteCommentaires']; $i++){
 
                     ?>
                     <!--Commentaire-->
-                    <div class="commentaire" id="<?php echo $lesCommentaires[$i]->GetId(); ?>">
+                    <div class="commentaire" id="<?php echo $produit->GetLesCommentaires()[$i]->GetId(); ?>">
 
                         <!--Header-->
                         <div class="commentaireHeader">
-                            <p class="pseudo"> <?php echo $lesCommentaires[$i]->GetUser()->GetPrenom(); ?></p>
+                            <p class="pseudo"> <?php echo $produit->GetLesCommentaires()[$i]->GetUser()->GetPrenom(); ?></p>
                             <div>
-                                <?php echo $lesCommentaires[$i]->AffichageNote(); ?>
+                                <?php echo $produit->GetLesCommentaires()[$i]->AffichageNote(); ?>
                             </div>
-                            <p class="date"> <?php echo $lesCommentaires[$i]->GetDateFormatee()." à ".$lesCommentaires[$i]->GetDateFormateeHeures() ?></p>
+                            <p class="date"> <?php echo $produit->GetLesCommentaires()[$i]->GetDateFormatee()." à ".$produit->GetLesCommentaires()[$i]->GetDateFormateeHeures() ?></p>
                         </div>
                         <!--Body-->
                         <div id="commentaireBody" class="commentaireBody">
-                            <p> <?php echo $lesCommentaires[$i]->GetCommentaire();?></p>
+                            <p> <?php echo $produit->GetLesCommentaires()[$i]->GetCommentaire();?></p>
                         </div>
                         <!--Footer-->
                         <div class="commentaireFooter">
                             <div class="row">
                                 <div class="col-4">
                                     <?php 
-                                        if( $lesCommentaires[$i]->EstModifiable()){ echo "<a class='mx-2 editButton' href='#'><i class='fa-solid fa-pen'></i> Modifier</a>";}
+                                        if( $produit->GetLesCommentaires()[$i]->EstModifiable()){ echo "<a class='mx-2 editButton' href='#'><i class='fa-solid fa-pen'></i> Modifier</a>";}
                                     ?>
                                 </div>
                                 <div class="col-4">
                                     <?php
-                                        if( $lesCommentaires[$i]->EstModifiable()){ echo "<a class='deleteButton' href='#'><i class='fa-solid fa-trash'></i> Supprimer</a>"; }
+                                        if( $produit->GetLesCommentaires()[$i]->EstModifiable()){ echo "<a class='deleteButton' href='#'><i class='fa-solid fa-trash'></i> Supprimer</a>"; }
                                     ?>
                                 </div>
                                 <div class="col-4 d-flex justify-content-end">
                                     <?php
-                                        if($lesCommentaires[$i]->GetDateLastModification() != null){echo '<p class="date">'.$lesCommentaires[$i]->GetDateLastModificationString().'</p>';};
+                                        if($produit->GetLesCommentaires()[$i]->GetDateLastModification() != null){echo '<p class="date">'.$produit->GetLesCommentaires()[$i]->GetDateLastModificationString().'</p>';};
                                     ?>
                                 </div>
                             </div>
@@ -223,7 +223,7 @@ if($page['produitExiste'] == true){
                 }
 
                 // Bouton afficher plus
-                if((count($lesCommentaires) - 1) > ($params['limiteCommentaires'])) {
+                if((count($produit->GetLesCommentaires()) - 1) > ($params['limiteCommentaires'])) {
                                                 
                     echo "<div class='afficherPlus'><a href='index.php?controller=produit&action=read&idCateg=".$params["idCateg"]."&idProduit=".$params['idProduit']."&limiteCommentaires=".$params['limiteCommentaires']."#avis'>Afficher plus</a></div>";
 

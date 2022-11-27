@@ -17,7 +17,9 @@ class produit{
     private int $qte;
     private float $prix;
     private array $lesImages = array();
+    private array $lesCommentaires = array();
     private ?float $noteMoyenne;
+    
 
 
     /**
@@ -35,6 +37,7 @@ class produit{
         
         $this->categorie = $Categ;
         array_push($this->lesImages, $lienImage,$lienImage2,$lienImage3,$lienImage4);
+        
 
 
     }
@@ -131,6 +134,33 @@ class produit{
     }
 
     /**
+     * Retourne les commentaires.
+     */
+    public function GetLesCommentaires(){
+
+        return $this->lesCommentaires;
+
+    }
+
+    /**
+     * Retourne le nombre de notes qu'a reçu le produit.
+     */
+    public function GetNbrNotes(){
+
+        $nbr = 0;
+
+        foreach($this->lesCommentaires as $unC){
+
+            if($unC->GetNote() != null){
+                $nbr ++;
+            }
+        }
+
+        return $nbr;
+    }
+
+
+    /**
      * Retourne 1 si le produit est en stock, 0 si il reste moins de 11 produits en stock, -1 si le produit est en rupture de stock.
      */
     public function EstEnStock(){
@@ -194,6 +224,16 @@ class produit{
     public function SetNoteMoyenne($note){
 
         $this->noteMoyenne = $note;
+
+    }
+
+
+    /**
+     * Ajoute un commentaire au produit
+     */
+    public function AddCommentaire($unCommentaire){
+
+        array_push($this->lesCommentaires, $unCommentaire);
 
     }
 

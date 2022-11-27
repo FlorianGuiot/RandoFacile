@@ -422,12 +422,12 @@ class ProduitsManager {
 
 
     /**
-     * getCommentairesProduitNote
-     * retourne une liste d'objets commentaire avec une note
+     * getNbrNotes
+     * retourne le nombre commentaire avec une note
      *
      * @return array
      */
-    public static function getCommentairesProduitNote($produit){
+    public static function getNbrNotes($produit){
 
         // Connexion bdd
         DbManager::getConnexion();
@@ -442,34 +442,48 @@ class ProduitsManager {
 
         // Récupération des commentaires.
         $idProduit = $produit->GetId();
-        $sql = "select idcom,iduser,idProduit,commentaire,note,dateCreation,dateLastModification FROM commentaire WHERE idProduit = :idProduit AND estVisible = 1 AND note IS NOT NULL ORDER BY dateCreation DESC";
+        $sql = "select count(idCom) as nbrNotes FROM commentaire WHERE idProduit = :idProduit AND estVisible = 1 AND note IS NOT NULL";
         $resultCommentaire=DbManager::$cnx->prepare($sql);
         $resultCommentaire->bindParam(':idProduit', $idProduit, PDO::PARAM_INT);
         $resultCommentaire->execute();
+        
+        $result_commentaire=$resultCommentaire->fetch();
 
-        while($result_commentaire=$resultCommentaire->fetch()){
+        return $result_commentaire['nbrNotes'];
 
-            require_once(ROOT."/controller/ProduitController.php");
-            require_once(ROOT."/model/UserManager.php");
-            $user = UserManager::getUserById($result_commentaire['iduser']);
-            $date = new DateTime($result_commentaire['dateCreation']);
-
-
-            $dateFormatter = new DateFormatter($date);
-            $heureEcrite = $dateFormatter->GetHeureEcrite();
-            $dateEcrite = $dateFormatter->GetDateEcrite();
+        
+    }
 
 
-            $dateLastModification = null;
+    /**
+     * getNbrCommentaires
+     * retourne le nombre de commentaires 
+     *
+     * @return array
+     */
+    public static function getNbrCommentaires($produit){
 
-            if($result_commentaire['dateLastModification'] != null){
-                $dateLastModification = new DateTime($result_commentaire['dateLastModification']);
-            }
-            
-            array_push($lesCommentaires, new commentaire($result_commentaire['idcom'],$user,$result_commentaire['commentaire'],$result_commentaire['note'],$date,$dateEcrite,$heureEcrite, $produit, $dateLastModification));
+        // Connexion bdd
+        DbManager::getConnexion();
+        // Affichage d'erreur en cas de non connexion à la base de données.
+        if(DbManager::getConnexion() == null ){
+
+            echo 'Erreur de connexion à la bdd.';
+
         }
         
-        return $lesCommentaires;
+        $lesCommentaires = array();
+
+        // Récupération des commentaires.
+        $idProduit = $produit->GetId();
+        $sql = "select count(idCom) as nbrCom FROM commentaire WHERE idProduit = :idProduit AND estVisible = 1";
+        $resultCommentaire=DbManager::$cnx->prepare($sql);
+        $resultCommentaire->bindParam(':idProduit', $idProduit, PDO::PARAM_INT);
+        $resultCommentaire->execute();
+        
+        $result_commentaire=$resultCommentaire->fetch();
+
+        return $result_commentaire['nbrCom'];
 
         
     }

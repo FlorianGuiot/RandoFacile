@@ -539,80 +539,84 @@ function GetStarsRating(){
 
 function CommentaireInfo(){
 
-    const nbrMax = 1024;
-    // Lorsque l'utilisateur modifie le champ commentaire :
-    document.querySelector("#commentaire").addEventListener("keyup", function(event) {
-        var commentaire = document.forms["form-commentaire"].elements["commentaire"].value;
+    //Si il existe une div id commentaire
+    if ($("#" + "commentaire").length > 0){
 
-        // Affiche le nombre de caractères.
-        if(commentaire.length>nbrMax){
-            document.getElementById("CommentaireHelp").innerHTML = '<p style="color:red;">'+commentaire.length+'/'+nbrMax+'</p>';
-        }
-        else{
-            document.getElementById("CommentaireHelp").innerHTML = '<p style="color:grey;">'+commentaire.length+'/'+nbrMax+'</p>';
-        }
+        const nbrMax = 1024;
+        // Lorsque l'utilisateur modifie le champ commentaire :
+        document.querySelector("#commentaire").addEventListener("keyup", function(event) {
+            var commentaire = document.forms["form-commentaire"].elements["commentaire"].value;
 
-    
-    }, false);
+            // Affiche le nombre de caractères.
+            if(commentaire.length>nbrMax){
+                document.getElementById("CommentaireHelp").innerHTML = '<p style="color:red;">'+commentaire.length+'/'+nbrMax+'</p>';
+            }
+            else{
+                document.getElementById("CommentaireHelp").innerHTML = '<p style="color:grey;">'+commentaire.length+'/'+nbrMax+'</p>';
+            }
 
-
-    document.querySelector("#bouton-commentaire").addEventListener("click", function(event) {
-        event.preventDefault();
-        var commentaire = document.forms["form-commentaire"].elements["commentaire"].value;
-
-        var commentaireValide = false;
-
-        /*Validation commentaire */
-
-        if(commentaire == ''){
-            document.getElementById("CommentaireHelp").innerHTML = '<p>Vous devez obligatoirement remplir ce champ.</p>';
-            commentaireValide = false;
-        }
-
-        else if(commentaire.length > nbrMax){
-            document.getElementById("CommentaireHelp").innerHTML = '<p>Vous ne pouvez pas poster un avis de plus de '+nbrMax+' caractères.</p>';
-            commentaireValide = false;
-        }
-
-        else{
-            document.getElementById("CommentaireHelp").innerHTML = '';
-            commentaireValide = true;
-        }
+        
+        }, false);
 
 
-        /* Envoie */
+        document.querySelector("#bouton-commentaire").addEventListener("click", function(event) {
+            event.preventDefault();
+            var commentaire = document.forms["form-commentaire"].elements["commentaire"].value;
 
-        if(commentaireValide == true){
+            var commentaireValide = false;
+
+            /*Validation commentaire */
+
+            if(commentaire == ''){
+                document.getElementById("CommentaireHelp").innerHTML = '<p>Vous devez obligatoirement remplir ce champ.</p>';
+                commentaireValide = false;
+            }
+
+            else if(commentaire.length > nbrMax){
+                document.getElementById("CommentaireHelp").innerHTML = '<p>Vous ne pouvez pas poster un avis de plus de '+nbrMax+' caractères.</p>';
+                commentaireValide = false;
+            }
+
+            else{
+                document.getElementById("CommentaireHelp").innerHTML = '';
+                commentaireValide = true;
+            }
+
+
+            /* Envoie */
+
+            if(commentaireValide == true){
+                
+                const infoProduit = document.querySelector("#info-produit");
+                let idProduit = infoProduit.dataset.id;
+                let note = GetStarsRating();
             
-            const infoProduit = document.querySelector("#info-produit");
-            let idProduit = infoProduit.dataset.id;
-            let note = GetStarsRating();
-           
 
-            $.ajax({
-                url:'index.php?controller=Produit&action=PostCommentaire',
-                type:'post',
-                data:{commentaire:commentaire,idProduit:idProduit,note:note},
-                success:function(response){
-                    
-                    if(response == " "){
+                $.ajax({
+                    url:'index.php?controller=Produit&action=PostCommentaire',
+                    type:'post',
+                    data:{commentaire:commentaire,idProduit:idProduit,note:note},
+                    success:function(response){
                         
-                        //Rechargement de la page
-                        location.reload();
-                        
-                        
-                    }else{
-                        //Message d'erreur
-                        $("#CommentaireHelp").html(response);
+                        if(response == " "){
+                            
+                            //Rechargement de la page
+                            location.reload();
+                            
+                            
+                        }else{
+                            //Message d'erreur
+                            $("#CommentaireHelp").html(response);
+                            
+                        }
                         
                     }
-                    
-                }
-            });
+                });
 
-        }
+            }
 
-      }, false);
+        }, false);
+    }
 }
 
 
@@ -849,6 +853,7 @@ function GetAddPanierInfo(){
 
     });
 
+
     //Change la valeur d'une quantité dans le panier
     $( qteProduitLignePanier ).on("change",function(event){
         event.preventDefault();
@@ -862,6 +867,7 @@ function GetAddPanierInfo(){
         
 
     });
+
     
 }
 

@@ -109,7 +109,7 @@ $recherche = '';
                         <a href="#connexion" data-toggle="modal">Mon espace</a>
                     </div>
                     <div>
-                        <a href="#modal_vide" onclick="disconnect()">Déconnexion</a>
+                        <a href="#deconnexion" onclick="disconnect()">Déconnexion</a>
                     </div>
 
                 </div>

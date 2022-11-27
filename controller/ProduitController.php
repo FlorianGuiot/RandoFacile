@@ -18,7 +18,13 @@ class ProduitController{
 
             //Commentaires du produit
             $lesCommentaires = ProduitsManager::getCommentairesProduit($produit);
-            $lesCommentaireWithNotes = ProduitsManager::getCommentairesProduitNote($produit);
+
+            foreach($lesCommentaires as $unC){
+
+                $produit->AddCommentaire($unC);
+
+            }
+            
             
             // Variables
             $params['page_name'] = $produit->GetLibelle();
