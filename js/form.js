@@ -8,6 +8,9 @@
 * @auteur: F.GUIOT
 */
 
+
+  
+
 //Test si l'email placé en parametre est valide
 
 //Retourne un objet contenant un bool et un message d'erreur
@@ -863,7 +866,11 @@ function GetAddPanierInfo(){
 
         //Récupère l'id du produit
         let id = $(parent).attr('id');
+
         
+        let qte = parseInt($(event.target).val()) ;
+
+        AddPanier(id,qte,true);
         
 
     });
@@ -872,13 +879,14 @@ function GetAddPanierInfo(){
 }
 
 
+
 //Ajoute le produit dans le panier 
 function AddPanier(idProduit,qte,modification){
 
 
     const sucessText =  '<div class="row">'+
                         '<div class="col-12 text-center">'+
-                        '<p>Le produit a bien été ajouté au panier !</p>'+
+                        '<p class="shake stockPlein">Le produit a bien été ajouté au panier !</p>'+
                         '</div>'+
                         '<div class="col-12 m-2 text-center">'+
                         '<i class="fa-solid fa-check fa-2xl" style="color:green;"></i>'+
@@ -886,7 +894,7 @@ function AddPanier(idProduit,qte,modification){
 
     const errorText =   '<div class="row">'+
                         '<div class="col-12 text-center">'+
-                        '<p>Une erreur est survenue lors de l\'ajout de l\'article dans le panier.</p>'+
+                        '<p class="shake stockVide">Une erreur est survenue lors de l\'ajout de l\'article dans le panier.</p>'+
                         '</div>'+
                         '<div class="col-12 m-2 text-center">'+
                         '<i class="fa-solid fa-circle-exclamation fa-2xl" style="color:red;"></i>'+
@@ -900,40 +908,41 @@ function AddPanier(idProduit,qte,modification){
         success:function(response){
             
             if(response == 1){
-                
-                // Met à jour l'affichage du panier       
-                $.ajax({
-                    url:'index.php?controller=Panier&action=AffichagePanier',
-                    type:'get',
-                    dataType: 'json',
-                    success:function(data){
-                        
-                        if(modification == false){
 
+                if(modification == false){
+                    
+                    // Met à jour l'affichage du panier       
+                    $.ajax({
+                        url:'index.php?controller=Panier&action=AffichagePanier',
+                        type:'get',
+                        dataType: 'json',
+                        success:function(data){
+                            
+                            
                             $("#panierUtilisateur").html(data[0]); //Met à jour le contenue
                             $("#panierUtilisateurNb").html(data[1]); //Met à jour le contenue
-
+                            
                             if($("#panierUtilisateurNb").hasClass("d-none")){
                                 $("#panierUtilisateurNb").removeClass("d-none");
                             }
+
+                            if($("#BtnRemovePanier").length != 0) {
+                                //Si le bouton existe
+                                if($("#BtnRemovePanier").hasClass("d-none")){
+                                    $("#BtnRemovePanier").removeClass("d-none");
+                                }
+                            }
                             
-                            //Affiche la modal 
-                            $('#modal_vide').modal('show');
-                            $("#titre_modal").html('');
-                            $("#contenu_modal").html(sucessText);
-                            $("#footer_modal").html("");
+                            //Affiche le message de succès  
+                            $("#qteHelp").html(sucessText);
 
                         }
-                    }
-                });
-
+                    });
+                }
             }else{
 
-                //Affiche la modal 
-                $('#modal_vide').modal('show');
-                $("#titre_modal").html('Erreur - Panier');
-                $("#contenu_modal").html(errorText);
-                $("#footer_modal").html("");
+                //Affiche le message d'erreur 
+                $("#qteHelp").html(errorText);
 
             }
 
@@ -945,6 +954,114 @@ function AddPanier(idProduit,qte,modification){
 }
 
 
+
+
+//Récupère les infos d'un produit et retire le produit du panier 
+function GetRemovePanierInfo(){
+
+    //Clique sur le bouton ajouter panier sur une page produit
+    $("body").on("click", ".BtnRemovePanier", function (event) {
+        event.preventDefault();
+
+        const infoProduit = document.querySelector("#info-produit");
+        let idProduit = infoProduit.dataset.id; 
+
+
+        RemovePanier(idProduit,false);
+        
+
+    });
+
+
+    //Change la valeur d'une quantité dans le panier
+    $(".panierlogin").on("click", ".BtnRemoveLignePanier", function (event) {
+        event.preventDefault();
+
+        //Retrouve le produit associé 
+        let parent = $(event.target).parent().parent().parent().parent().parent();
+
+        
+        //Récupère l'id du produit
+        let id = $(parent).attr('id');
+
+        $(parent).html("");
+        
+
+        RemovePanier(id,true);
+        
+    });
+}
+
+
+//Retire le produit du panier 
+function RemovePanier(idProduit,modification){
+
+
+    const sucessText =  '<div class="row">'+
+                        '<div class="col-12 text-center">'+
+                        '<p class="shake stockPlein">Le produit a bien été retiré du panier !</p>'+
+                        '</div>'+
+                        '<div class="col-12 m-2 text-center">'+
+                        '<i class="fa-solid fa-check fa-2xl" style="color:green;"></i>'+
+                        '</div>';
+
+    const errorText =   '<div class="row">'+
+                        '<div class="col-12 text-center">'+
+                        '<p class="shake stockVide">Une erreur est survenue lors de la suppression de l\'article dans le panier.</p>'+
+                        '</div>'+
+                        '<div class="col-12 m-2 text-center">'+
+                        '<i class="fa-solid fa-circle-exclamation fa-2xl" style="color:red;"></i>'+
+                        '</div>';
+
+
+    $.ajax({
+        url:'index.php?controller=Panier&action=RemovePanier',
+        type:'post',
+        data:{idProduit:idProduit},
+        success:function(response){
+            
+            if(response == 1){
+                
+                if(!modification){
+                    // Met à jour l'affichage du panier       
+                    $.ajax({
+                        url:'index.php?controller=Panier&action=AffichagePanier',
+                        type:'get',
+                        dataType: 'json',
+                        success:function(data){
+                            
+
+                            $("#panierUtilisateur").html(data[0]); //Met à jour le contenue
+                            $("#panierUtilisateurNb").html(data[1]); //Met à jour le contenue
+                            
+                            if($("#BtnRemovePanier").length != 0) {
+                                //Si le bouton existe
+                                $("#BtnRemovePanier").removeClass("d-none");
+                            }
+
+                            //Affiche le message de succès  
+                            $("#qteHelp").html(sucessText);
+
+                        }
+                    });
+                }
+
+            }else{
+
+                //Affiche le message d'erreur 
+                $("#qteHelp").html(errorText);
+
+            }
+
+            
+        }
+    });
+
+    
+}
+
+
+
 function init(){
     validationConnexion();
     validationInscription(1);
@@ -953,7 +1070,9 @@ function init(){
     InscriptionInfo();
     editButtonCommentaire();
     DeleteButtonCommentaire();
+    GetRemovePanierInfo();
     GetAddPanierInfo();
+
 }
 
 function initInscription(){

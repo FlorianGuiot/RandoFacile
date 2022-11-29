@@ -130,4 +130,53 @@ class PanierManager {
     }
 
 
+
+    /**
+     * RemovePanier
+     * retire un produit du panier de l'utilisateur
+     * retourne true si le produit est retiré
+     * @return bool
+     */
+    public static function RemovePanier($produit,$idUser){
+
+        // Connexion bdd
+        DbManager::getConnexion();
+        // Affichage d'erreur en cas de non connexion à la base de données.
+        if(DbManager::getConnexion() == null ){
+
+            echo 'Erreur de connexion à la bdd.';
+
+        }
+
+        $remove = true;
+        
+        $idProduit = $produit->GetId();
+
+
+        //DELETE le produit de la table panier
+        try{
+
+            $sql='DELETE FROM PANIER WHERE idProduit = :idProduit AND idUser = :idUser';
+            $removeProduct = DbManager::$cnx->prepare($sql);
+            $removeProduct->bindParam(':idProduit', $idProduit);
+            $removeProduct->bindParam(':idUser', $idUser);
+
+            // Exécution ! 
+            $removeProduct->execute();
+            
+
+
+        }catch(PDOException $e){
+
+            $remove = false;
+
+        }
+
+
+
+        return $remove;
+
+    }
+
+
 }

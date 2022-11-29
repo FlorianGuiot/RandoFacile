@@ -29,43 +29,79 @@
     // }
 
     
-    $nbrLignes = 0;
+    // //Ajouter un produit au panier
+    // $nbrLignes = 0;
 
-    if(isset($_COOKIE['panier'])){
+    // if(isset($_COOKIE['panier'])){
 
-        $nbrLignes = count($_COOKIE['panier']);
+    //     $nbrLignes = count($_COOKIE['panier']) + 1;
 
-    }
+    // }
 
-    $lignePanier = [
-                        'produit' => 1,
-                        'qte' => 12
+    // echo count($_COOKIE['panier']);
 
-                    ];
+    // $lignePanier = [
+    //                     'idProduit' => 2,
+    //                     'qte' => 12
 
-    $lignePanier = json_encode($lignePanier);
-    setcookie("panier[".$nbrLignes."]",$lignePanier);
+    //                 ];
+
+    // $lignePanier = json_encode($lignePanier);
+    // setcookie("panier[".$nbrLignes."]",$lignePanier,time() + (86400 * 15), "/"); //Cookies valable 15 jours.
     
+    // var_dump($_COOKIE);
+
+    // //Supprimer un produit du panier
+    // if(isset($_COOKIE['panier'])){
+
+    //     foreach($_COOKIE['panier'] as $name => $value){
+        
+    //         $ligne = json_decode($value, true);
+    //         if(isset($ligne['idProduit'] )){
+    //             if($ligne['idProduit'] == 1){
+                    
+    //                 setcookie('panier['.$name.']', false, time() - 3600, '/');
+    //                 unset($_COOKIE['panier'][$name]);
+        
+    //             }
+    //         }
+
+    //         if(isset($ligne['produit'] )){
+    //             if($ligne['produit'] == 1){
+                    
+    //                 setcookie('panier['.$name.']', false, time() - 3600, '/'); //
+    //                 unset($_COOKIE['panier'][$name]);
+        
+    //             }
+    //         }
+    //     }
+    
+
+    // }
+    
+    // //Afficher le produit
+    // foreach($_COOKIE['panier'] as $value){
+        
+    //     $ligne = json_decode($value, true);
+    //     var_dump($ligne);
+    //     echo  $ligne['produit'];
+    //     // $result = (string)$ligne['qte'];
+    //     // echo $result;
+    // }
+
     var_dump($_COOKIE);
+    
+    $lePanier = PanierController::GetPanier();
 
-    //Supprimer
-    foreach($_COOKIE['panier'] as $name => $value){
-        
-        $ligne = json_decode($value, true);
-        if($ligne['produit'] == 1){
-            unset($_COOKIE['panier'][$name]);
-        }
-    }
+    var_dump($lePanier);
+    
+    $leProduit = ProduitsManager::getProduitParId(1);
+    $leProduit2 = ProduitsManager::getProduitParId(2);
+    $lePanier->AddProduit($leProduit,1,time());
+    $lePanier->AddProduit($leProduit2,1,time());
+    $lePanier->RemoveProduit($leProduit);
 
-    //Afficher le produit
-    foreach($_COOKIE['panier'] as $value){
-        
-        $ligne = json_decode($value, true);
-        var_dump($ligne);
-        echo  $ligne['produit'];
-        // $result = (string)$ligne['qte'];
-        // echo $result;
-    }
+    var_dump($lePanier);
 
     var_dump($_COOKIE);
 ?>

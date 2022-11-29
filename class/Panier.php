@@ -8,7 +8,7 @@
 
 class panier{
 
-    private array $panier = array();
+    protected array $panier = array();
 
 
     /**
@@ -42,6 +42,21 @@ class panier{
 
     }
 
+    /**
+     * Retire un produit du panier cookies.
+     */
+    public function RemoveProduit(produit $produit){
+
+        //Supprime le produit du tableau panier
+        foreach($this->panier as $unP){
+
+            if($key = array_search($produit->GetId(),$this->panier) !== false){
+                unset($this->panier[$key]);
+            }
+        }
+
+    }
+
 
     /**
      * GetNbrProduits()
@@ -51,7 +66,14 @@ class panier{
      */
     public function GetNbrProduits(){
         
-        return count($this->panier);
+        $total = 0;
+
+        foreach($this->panier as $unP){
+
+            $total += $unP['qte'];
+        }
+
+        return $total;
 
     }
 
@@ -85,16 +107,50 @@ class panier{
      */
     public function EstDansLePanier($produit){
 
-        $estDansLePanier = true;
+        $estDansLePanier = false;
 
-        if(!array_search($produit, $this->panier)){
+        foreach($this->panier as $unP){
 
-            $estDansLePanier = false;
-            
+            if($unP['produit']->GetId() == $produit->GetId()){
+                $estDansLePanier = true;
+            }
         }
-
         return $estDansLePanier;
 
+    }
+
+
+
+    /**
+     * GetAffichagePanier()
+     * Retourne le panier de l'utilisateur dans un code HTML
+     * 
+     * @return string
+     */
+    public function GetAffichagePanier(){
+
+
+        $html = '<div class="d-flex justify-content-center m-2"><button id="BtnVoirLePanier" class="btn btn-primary">Voir le panier</button></div>'. 
+                '<div class="d-flex justify-content-center"><p>Total : '.$this->GetPrixTotal().' €</p></div> <div class="panier-container">';
+
+        foreach($this->panier as $unP){
+            
+            
+            $html .= '<div id="'.$unP['produit']->GetId().'"><a class="dropdown-item lignePanier" href="#"><img height="40" src="'.$unP['produit']->GetLiensImage()[0].'"> '.$unP['produit']->GetLibelle().
+            '<div class="row mt-1">'.
+            '<div class="col-6">'.
+            '<input  id="qteProduitLignePanier" type="number"  class="form-control qteProduitLignePanier" value="'.$unP['qte'].'" max="'.$unP['produit']->GetQteEnStock().'" min="1">'.
+            '</div>'.
+            '<div class="col-6">'.
+            '<button id="BtnRemoveLignePanier" type="button" class="btn btn-danger BtnRemoveLignePanier"><i class="fa-solid fa-trash"></i></button>'.
+            '</div>'.
+            '</div></a></div>';
+
+        }
+        
+        $html .= "</div>";
+
+        return $html;
     }
 
 

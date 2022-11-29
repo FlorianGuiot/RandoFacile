@@ -112,6 +112,8 @@ if($page['produitExiste'] == true){
                             '</form>';
 
                         } ?>
+
+                        <a id="BtnRemovePanier" href="" class="BtnRemovePanier linkRemove <?php  if($lePanier->EstDansLePanier($produit)){echo "";}else{ echo "d-none"; } ?>">Retirer l'article du panier</a>
                     </div>
                     
                 </div>

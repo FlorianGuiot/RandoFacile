@@ -29,6 +29,7 @@ class ProduitController{
             // Variables
             $params['page_name'] = $produit->GetLibelle();
             $page['produitExiste'] = true;
+            $lePanier = PanierController::GetPanier();
 
             if(!isset($params['limiteCommentaires'])){
 

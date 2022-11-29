@@ -12,6 +12,7 @@
      require_once __DIR__.'/class/Commentaire.php';
      require_once __DIR__.'/class/Utilisateur.php';
      require_once __DIR__.'/class/Panier.php';
+     require_once __DIR__.'/class/PanierCookies.php';
 
      require_once __DIR__.'/utils/DateFormatter.php';
      
