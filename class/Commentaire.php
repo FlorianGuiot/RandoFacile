@@ -1,4 +1,5 @@
 <?php
+use Date\Utils\DateFormatter;
 /**
  * Description de la class commentaire
  * 
@@ -13,24 +14,21 @@ class commentaire{
     private string $commentaire;
     private ?int $note;
     private DateTime $date;
-    private string $dateFormatee;
-    private string $dateFormateeHeures;
     private produit $produit;
     private ?DateTime $dateLastModification;
+    private bool $aCommande;
 
 
     /**
      * Constructeur de Commentaire.
      */
-    public function __construct(int $id = 0, utilisateur $user = null, string $commentaire = "", int $note = null, DateTime $date = null, string $dateFormatee = "",string $dateFormateeHeures = "", produit $produit = null, DateTime $dateLastModification = null)
+    public function __construct(int $id = 0, utilisateur $user = null, string $commentaire = "", int $note = null, DateTime $date = null, produit $produit = null, DateTime $dateLastModification = null)
     {
         $this->id = $id;
         $this->user = $user;
         $this->commentaire = $commentaire;
         $this->note = $note;
         $this->date = $date;
-        $this->dateFormatee = $dateFormatee;
-        $this->dateFormateeHeures = $dateFormateeHeures;
         $this->produit = $produit;
         $this->dateLastModification = $dateLastModification;
 
@@ -78,7 +76,9 @@ class commentaire{
      */
     public function GetDateFormatee(){
 
-        return $this->dateFormatee;
+        $dateFormatter = new DateFormatter($this->date);
+
+        return $dateFormatter->GetDateEcrite();
 
     }
 
@@ -87,7 +87,9 @@ class commentaire{
      */
     public function GetDateFormateeHeures(){
 
-        return $this->dateFormateeHeures;
+        $dateFormatter = new DateFormatter($this->date);
+
+        return $dateFormatter->GetHeureEcrite();
 
     }
 

@@ -8,3 +8,4 @@ RewriteRule ^recherche/([A-Z]+)/$   index.php?controller=Recherche&action=read&r
 RewriteRule ^recherche/([A-Z]+)/article/([0-9]+)/$   index.php?controller=Produit&action=read&idProduit=$2&recherche=$1 [nc,qsa]
 RewriteRule ^categorie/([0-9]+)/article/([0-9]+)/$   index.php?controller=Produit&action=read&idProduit=$2&idCateg=$1 [nc,qsa]
 
+ErrorDocument 404 http://localhost/Randofacile/index.php?controller=Erreur&action=read404

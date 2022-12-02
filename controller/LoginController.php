@@ -45,12 +45,21 @@ class LoginController{
 
     /**
      * ConnexionSession
-     */
+     */ 
     public static function connexionNewSession($user){
 
+        //Récupère le panier stocké dans les cookies
+        $lePanier = PanierController::GetPanier();
+        
         //Utilisateur connecté
         $_SESSION["iduser"] = $user->GetId();
         $_SESSION["email"] = $user->GetEmail();
+
+        //Ajout du panier cookie au compte de l'utilisateur
+        PanierController::SetPanier($lePanier);
+
+        //Détruit le panier cookie
+        $lePanier->RemoveProduitsAll();
         
     }
 

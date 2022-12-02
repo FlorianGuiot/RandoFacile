@@ -270,12 +270,14 @@ if($page['produitExiste'] == true){
         </div>
 
         <div class="col-sm-12">
-            <p class="text-center fs-4 text">Mince, il semble que le produit recherché n'existe pas...</p>
+            <p class="text-center fs-4 text">Il semblerait que le produit recherché n'existe plus...</p>
         </div>
 
-        <!-- <div class="col-sm-12">
-            <div class="col-12"><button name="bouton-accueil" id="bouton-accueil"  value="accueil" class="btn btn-primary" onclick="window.location.href = 'index' >Retour à l'accueil </button></div>';
-        </div> -->
+        <div class="col-sm-12 d-flex justify-content-center">
+            <form action="index">
+                <button class="btn btn-primary" >Retour à l'accueil</button>
+            </form>
+        </div>
 
     </div>
 
@@ -286,6 +288,10 @@ if($page['produitExiste'] == true){
     
 }
 //Fin erreur
+
+
+    require_once("./view/footer/footer.php"); // footer
+
 ?>
 
 

@@ -401,17 +401,13 @@ class ProduitsManager {
             $user = UserManager::getUserById($result_commentaire['iduser']);
             $date = new DateTime($result_commentaire['dateCreation']);
 
-            $dateFormatter = new DateFormatter($date);
-            $heureEcrite = $dateFormatter->GetHeureEcrite();
-            $dateEcrite = $dateFormatter->GetDateEcrite();
-
             $dateLastModification = null;
 
             if($result_commentaire['dateLastModification'] != null){
                 $dateLastModification = new DateTime($result_commentaire['dateLastModification']);
             }
             
-            array_push($lesCommentaires, new commentaire($result_commentaire['idcom'],$user,$result_commentaire['commentaire'],$result_commentaire['note'],$date, $dateEcrite,$heureEcrite, $produit, $dateLastModification));
+            array_push($lesCommentaires, new commentaire($result_commentaire['idcom'],$user,$result_commentaire['commentaire'],$result_commentaire['note'],$date, $produit, $dateLastModification));
         }
         
         return $lesCommentaires;
@@ -518,14 +514,10 @@ class ProduitsManager {
         require_once(ROOT."/model/UserManager.php");
         $user = UserManager::getUserById($result_commentaire['iduser']);
         $date = new DateTime($result_commentaire['dateCreation']);
-
-        $dateFormatter = new DateFormatter($date);
-        $heureEcrite = $dateFormatter->GetHeureEcrite();
-        $dateEcrite = $dateFormatter->GetDateEcrite();
         
         $dateLastModification = new DateTime($result_commentaire['dateLastModification']);
         $produit = self::getProduitParId($result_commentaire['idProduit']);
-        $leCommentaire = new commentaire($result_commentaire['idcom'],$user,$result_commentaire['commentaire'],$result_commentaire['note'],$date,$dateEcrite ,$heureEcrite, $produit, $dateLastModification);
+        $leCommentaire = new commentaire($result_commentaire['idcom'],$user,$result_commentaire['commentaire'],$result_commentaire['note'],$date, $produit, $dateLastModification);
         
         
         return $leCommentaire;

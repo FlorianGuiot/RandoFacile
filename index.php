@@ -77,8 +77,18 @@ if(file_exists($filePath)){
         //La methode existe
         //Execution de l'action
         $controller::$action($params);
+    }else{
+
+        require_once(__DIR__.'/controller/ErreurController.php');
+        ErreurController::read404();
+
     }
 
+}else{
+    
+    require_once(__DIR__.'/controller/ErreurController.php');
+    ErreurController::read404();
+   
 }
 
 

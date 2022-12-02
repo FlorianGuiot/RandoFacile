@@ -103,6 +103,36 @@ class panierCookie extends panier{
 
     }
 
+
+    /**
+     * Retire tous les produits du panier cookies.
+     */
+    public function RemoveProduitsAll(){
+
+        //Supprimer le produit du panier cookie
+        if(isset($_COOKIE['panier'])){
+
+            foreach($_COOKIE['panier'] as $name => $value){
+            
+                $ligne = json_decode($value, true);
+
+                if(isset($ligne['idProduit'] )){
+
+                    setcookie('panier['.$name.']', false, time() - 3600, '/');
+                    unset($_COOKIE['panier'][$name]);
+            
+
+                }
+
+            }
+
+        }
+        
+        //Remet le panier à 0
+        parent::RemoveProduitsAll();
+
+    }
+
 }
 
 ?>

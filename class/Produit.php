@@ -19,6 +19,7 @@ class produit{
     private array $lesImages = array();
     private array $lesCommentaires = array();
     private ?float $noteMoyenne;
+    private float $tva = 0.20;
     
 
 
@@ -125,6 +126,15 @@ class produit{
     }
 
     /**
+     * Retourne le montant d'un produit pour une quantité TTC.
+     */
+    public function CalculerMontant($qte){
+
+        return number_format((float)($this->prix + ($this->prix * $this->tva)) * $qte, 2, '.', '');
+
+    }
+
+    /**
      * Retourne la date d'ajout.
      */
     public function GetDateAjout(){
@@ -140,6 +150,16 @@ class produit{
 
         return $this->lesCommentaires;
 
+    }
+
+     /**
+     * Retourne le lien du produit.
+     * @return string
+     */
+    public function GetLienProduit(){
+
+
+        return "index?controller=Produit&action=read&idProduit=".$this->GetId()."&idCateg=".$this->GetCategorie()->GetId();
     }
 
     /**
@@ -204,16 +224,6 @@ class produit{
 
 
         return $html;
-
-    }
-
-
-    /**
-     * Retourne le montant d'un produit pour une quantité hors taxe.
-     */
-    public function CalculerMontant($uneQuantite){
-
-        return $this->prix * $uneQuantite;
 
     }
 

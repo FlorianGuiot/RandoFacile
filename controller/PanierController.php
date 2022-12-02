@@ -3,6 +3,27 @@
 
 class PanierController{
 
+
+     /**
+     * Affiche la page paniers
+     */
+    public static function read(){
+        
+        $params['page_name'] = "Mon panier";
+        $lePanier = self::GetPanier();
+        $lePanierListe = $lePanier->GetPanier();
+        
+        /*
+        ====================
+        Affichage de la page
+        ====================
+        */
+        require_once("./view/panier/panier.php"); // Page panier
+    
+    
+
+    }
+
     /**
      * GetPanier()
      * Retourne le panier de l'utilisateur 
@@ -16,7 +37,7 @@ class PanierController{
         //Si l'utilisateur est connecté -> on récupère le panier en base de donnée
         if(isset($_SESSION['iduser'])){
 
-            $panier = new panier();
+            $panier = new panier(); 
 
             $panier = PanierManager::GetPanierById($_SESSION['iduser']);
 
@@ -48,6 +69,34 @@ class PanierController{
 
         return $panier;
     }
+
+
+
+
+
+    /**
+     * SetPanier
+     * Ajoute tous les produit du panier en base de donnée
+     * retourne true si le panier est ajouté
+     * 
+     * @param panier $lePanier
+     * @return void
+     */
+    public static function SetPanier(panier $lePanier){
+        
+        $tableauPanier = $lePanier->GetPanier();
+
+        date_default_timezone_set('Europe/Paris');
+        $dateDuJour = date('Y-m-d H:i:s', time()); //Date de l'ajout dans le panier
+
+        for($i = 0; $i <= count($tableauPanier) - 1; $i++){
+
+            PanierManager::AddPanier($tableauPanier[$i]['produit'],$tableauPanier[$i]['qte'],$_SESSION['iduser'],$dateDuJour);
+            
+        }
+
+    }
+
 
 
     /**
@@ -95,6 +144,7 @@ class PanierController{
 
 
 
+
     /**
      * RemovePanier($idProduit)
      * Retire un produit du panier de l'utilisateur dans la bdd
@@ -139,6 +189,9 @@ class PanierController{
 
 
 
+
+
+
     /**
      * AffichagePanier()
      * Retourne le panier de l'utilisateur dans un code HTML ainsi que le nombre de produits dans le panier
@@ -157,9 +210,6 @@ class PanierController{
         echo json_encode($panierInfo);
 
     }
-
-
-
 }
 
 ?>

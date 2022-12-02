@@ -22,6 +22,8 @@ class panier{
 
     /**
      * Retourne le panier de l'utilisateur.
+     * 
+     * @return array
      */
     public function GetPanier(){
 
@@ -31,6 +33,8 @@ class panier{
 
     /**
      * Ajoute un produit au panier.
+     * 
+     * @return void
      */
     public function AddProduit(produit $produit, int $qte){
 
@@ -44,6 +48,8 @@ class panier{
 
     /**
      * Retire un produit du panier cookies.
+     * 
+     * @return void
      */
     public function RemoveProduit(produit $produit){
 
@@ -54,6 +60,19 @@ class panier{
                 unset($this->panier[$key]);
             }
         }
+
+    }
+
+
+    /**
+     * Retire tous les produits du panier.
+     * 
+     * @return void
+     */
+    public function RemoveProduitsAll(){
+
+        //Remet le panier à 0
+        $this->panier = array();
 
     }
 
@@ -130,19 +149,19 @@ class panier{
     public function GetAffichagePanier(){
 
 
-        $html = '<div class="d-flex justify-content-center m-2"><button id="BtnVoirLePanier" class="btn btn-primary">Voir le panier</button></div>'. 
-                '<div class="d-flex justify-content-center"><p>Total : '.$this->GetPrixTotal().' €</p></div> <div class="panier-container">';
+        $html = '<div class="d-flex justify-content-center m-2"><a href="index.php?controller=Panier&action=read" class="btn btn-primary">Mon panier</a></div>'. 
+                '<div class="d-flex justify-content-center"><p>Total : '.$this->GetPrixTotal().' €  TTC</p></div> <div class="panier-container">';
 
         foreach($this->panier as $unP){
             
-            
-            $html .= '<div id="'.$unP['produit']->GetId().'"><a class="dropdown-item lignePanier" href="#"><img height="40" src="'.$unP['produit']->GetLiensImage()[0].'"> '.$unP['produit']->GetLibelle().
+
+            $html .= '<div id="'.$unP['produit']->GetId().'"><a class="dropdown-item lignePanier" href="'.$unP['produit']->GetLienProduit().'"><img height="40" src="'.$unP['produit']->GetLiensImage()[0].'"> '.$unP['produit']->GetLibelle().
             '<div class="row mt-1">'.
             '<div class="col-6">'.
             '<input  id="qteProduitLignePanier" type="number"  class="form-control qteProduitLignePanier" value="'.$unP['qte'].'" max="'.$unP['produit']->GetQteEnStock().'" min="1">'.
             '</div>'.
             '<div class="col-6">'.
-            '<button id="BtnRemoveLignePanier" type="button" class="btn btn-danger BtnRemoveLignePanier"><i class="fa-solid fa-trash"></i></button>'.
+            '<button id="BtnRemoveLignePanier" class="btn btn-danger BtnRemoveLignePanier"><i class="fa-solid fa-trash"></i></button>   '.$unP['produit']->CalculerMontant($unP['qte']).'€'.
             '</div>'.
             '</div></a></div>';
 

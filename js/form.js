@@ -979,14 +979,28 @@ function GetRemovePanierInfo(){
 
         //Retrouve le produit associé 
         let parent = $(event.target).parent().parent().parent().parent().parent();
-
         
         //Récupère l'id du produit
         let id = $(parent).attr('id');
 
         $(parent).html("");
         
+        RemovePanier(id,true);
+        
+    });
 
+    //Change la valeur d'une quantité dans le panier
+    $("#panier-page-container").on("click", ".BtnRemoveLignePanier", function (event) {
+        event.preventDefault();
+
+        //Retrouve le produit associé 
+        let parent = $(event.target).parents(".panierProduit");
+        
+        //Récupère l'id du produit
+        let id = $(parent).data('id');
+
+        $(parent).html("Produit supprimé");
+        
         RemovePanier(id,true);
         
     });
@@ -1022,18 +1036,18 @@ function RemovePanier(idProduit,modification){
             
             if(response == 1){
                 
-                if(!modification){
-                    // Met à jour l'affichage du panier       
-                    $.ajax({
-                        url:'index.php?controller=Panier&action=AffichagePanier',
-                        type:'get',
-                        dataType: 'json',
-                        success:function(data){
-                            
+                // Met à jour l'affichage du panier       
+                $.ajax({
+                    url:'index.php?controller=Panier&action=AffichagePanier',
+                    type:'get',
+                    dataType: 'json',
+                    success:function(data){
+                        
 
-                            $("#panierUtilisateur").html(data[0]); //Met à jour le contenue
-                            $("#panierUtilisateurNb").html(data[1]); //Met à jour le contenue
-                            
+                        $("#panierUtilisateur").html(data[0]); //Met à jour le contenue
+                        $("#panierUtilisateurNb").html(data[1]); //Met à jour le contenue
+                        
+                        if(!modification){
                             if($("#BtnRemovePanier").length != 0) {
                                 //Si le bouton existe
                                 $("#BtnRemovePanier").removeClass("d-none");
@@ -1041,16 +1055,17 @@ function RemovePanier(idProduit,modification){
 
                             //Affiche le message de succès  
                             $("#qteHelp").html(sucessText);
-
                         }
-                    });
-                }
+
+                    }
+                });
 
             }else{
 
-                //Affiche le message d'erreur 
-                $("#qteHelp").html(errorText);
-
+                if(!modification){
+                    //Affiche le message d'erreur 
+                    $("#qteHelp").html(errorText);
+                }
             }
 
             

@@ -12,10 +12,11 @@ class ProduitController{
 
         //Le Produit à afficher
         $produit = ProduitsManager::getProduitParId($params['idProduit']);
-        $produit = self::SetNoteMoyenneProduit($produit); //Rajoute la note moyenne au produit
 
         if($produit != null){
 
+            $produit = self::SetNoteMoyenneProduit($produit); //Rajoute la note moyenne au produit
+            
             //Commentaires du produit
             $lesCommentaires = ProduitsManager::getCommentairesProduit($produit);
 
