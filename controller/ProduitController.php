@@ -91,12 +91,13 @@ class ProduitController{
         }else{
 
             $lien = "";
-
+            
         }
 
         return $lien;
 
     }
+    
 
 
     /**
@@ -119,7 +120,6 @@ class ProduitController{
         
 
         return $html;
-    
     
 
     }

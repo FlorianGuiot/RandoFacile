@@ -135,6 +135,15 @@ class produit{
     }
 
     /**
+     * Retourne le montant HT d'un produit pour une quantité TTC.
+     */
+    public function CalculerMontantHT($qte){
+
+        return number_format((float)$this->prix * $qte, 2, '.', '');
+
+    }
+
+    /**
      * Retourne la date d'ajout.
      */
     public function GetDateAjout(){

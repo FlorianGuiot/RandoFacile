@@ -7,7 +7,43 @@
 *
 * @auteur: F.GUIOT
 */
+const TVA = 0.20;
 
+function CalculerMontant(prix, qte){
+
+    
+    return ((prix +(prix * TVA)) * qte).toFixed(2);
+}
+
+function CalculerMontantTotal(prix, qte){
+
+    let total = 0;
+
+    $(".panierProduit").each(function() {
+        let prix = parseFloat($(this).find(".prixTotalProduit").data('prix'));
+        let qte = parseInt($(this).find(".qteProduitLignePanier").val());
+
+        total += prix * qte;
+
+    });
+
+    return (total + (total * TVA)).toFixed(2);
+}
+
+function CalculerMontantTotalHT(prix, qte){
+
+    let total = 0;
+
+    $(".panierProduit").each(function() {
+        let prix = parseFloat($(this).find(".prixTotalProduit").data('prix'));
+        let qte = parseInt($(this).find(".qteProduitLignePanier").val());
+
+        total += prix * qte;
+
+    });
+
+    return total.toFixed(2);
+}
 
   
 
@@ -857,12 +893,12 @@ function GetAddPanierInfo(){
     });
 
 
-    //Change la valeur d'une quantité dans le panier
+    //Change la valeur d'une quantité dans le panier ligne
     $( qteProduitLignePanier ).on("change",function(event){
         event.preventDefault();
 
         //Retrouve le commentaire associé 
-        let parent = $(event.target).parent().parent().parent().parent();
+        let parent = $(event.target).parent().parent().parent();
 
         //Récupère l'id du produit
         let id = $(parent).attr('id');
@@ -875,9 +911,53 @@ function GetAddPanierInfo(){
 
     });
 
+
+
+
+
+    //Change la valeur d'une quantité dans le panier
+    $("#panier-page-container").on("change", ".qteProduitLignePanier", function (event) {
+        event.preventDefault();
+
+        let prixTotalePanier = $("#prixTotalePanier");
+
+        //Retrouve le produit associé 
+        let parent = $(event.target).parents(".panierProduit");
+        
+        //Récupère l'id du produit
+        let id = $(parent).data('id');
+
+        let prix = parseFloat($(parent).find(".prixTotalProduit").data('prix'));
+        let prixTotalProduit = $(parent).find(".prixTotalProduit").text();
+
+        let qte = parseInt($(event.target).val()) ;
+        let qteMax = parseInt($(event.target).attr('max'));
+        let qteMin= parseInt($(event.target).attr('min'));
+        
+        prixTotalProduit = CalculerMontant(prix, qte);
+        $(parent).find(".prixTotalProduit").html(prixTotalProduit);
+
+
+        $("#prixTotalPanier").html(CalculerMontantTotal());
+        $("#prixTotalPanierHT").html(CalculerMontantTotalHT());
+
+        if((qte >= qteMax) || (qte < qteMin) ){
+
+            $(parent).find(".qteHelp").html("<span class='text-danger'>La quantité maximale a été atteinte.</span>");
+
+        }else{
+            $(parent).find(".qteHelp").html("");
+            //Ajoute le produit au panier
+            AddPanier(id,qte,true);
+
+        }
+
+        
+        
+    });
+
     
 }
-
 
 
 //Ajoute le produit dans le panier 
@@ -909,40 +989,44 @@ function AddPanier(idProduit,qte,modification){
             
             if(response == 1){
 
-                if(modification == false){
                     
-                    // Met à jour l'affichage du panier       
-                    $.ajax({
-                        url:'index.php?controller=Panier&action=AffichagePanier',
-                        type:'get',
-                        dataType: 'json',
-                        success:function(data){
-                            
-                            
-                            $("#panierUtilisateur").html(data[0]); //Met à jour le contenue
-                            $("#panierUtilisateurNb").html(data[1]); //Met à jour le contenue
-                            
-                            if($("#panierUtilisateurNb").hasClass("d-none")){
-                                $("#panierUtilisateurNb").removeClass("d-none");
-                            }
+                // Met à jour l'affichage du panier       
+                $.ajax({
+                    url:'index.php?controller=Panier&action=AffichagePanier',
+                    type:'get',
+                    dataType: 'json',
+                    success:function(data){
+                        
+                        
+                        
+                        $("#panierUtilisateurNb").html(data[1]); //Met à jour le contenue
+                        
+                        if($("#panierUtilisateurNb").hasClass("d-none")){
+                            $("#panierUtilisateurNb").removeClass("d-none");
+                        }
 
-                            if($("#BtnRemovePanier").length != 0) {
-                                //Si le bouton existe
-                                if($("#BtnRemovePanier").hasClass("d-none")){
-                                    $("#BtnRemovePanier").removeClass("d-none");
-                                }
+                        if($("#BtnRemovePanier").length != 0) {
+                            //Si le bouton existe
+                            if($("#BtnRemovePanier").hasClass("d-none")){
+                                $("#BtnRemovePanier").removeClass("d-none");
                             }
-                            
+                        }
+                        
+                        if(modification == false){
+                            $("#panierUtilisateur").html(data[0]); //Met à jour le contenue
                             //Affiche le message de succès  
                             $("#qteHelp").html(sucessText);
-
                         }
-                    });
-                }
+                    }
+                });
+
             }else{
 
-                //Affiche le message d'erreur 
-                $("#qteHelp").html(errorText);
+                if(modification == false){
+                    //Affiche le message d'erreur 
+                    $("#qteHelp").html(errorText);
+                }
+                
 
             }
 
@@ -973,12 +1057,12 @@ function GetRemovePanierInfo(){
     });
 
 
-    //Change la valeur d'une quantité dans le panier
+    //Change la valeur d'une quantité dans le panier en ligne
     $(".panierlogin").on("click", ".BtnRemoveLignePanier", function (event) {
         event.preventDefault();
 
         //Retrouve le produit associé 
-        let parent = $(event.target).parent().parent().parent().parent().parent();
+        let parent = $(event.target).parent().parent().parent().parent();
         
         //Récupère l'id du produit
         let id = $(parent).attr('id');
@@ -1044,7 +1128,7 @@ function RemovePanier(idProduit,modification){
                     success:function(data){
                         
 
-                        $("#panierUtilisateur").html(data[0]); //Met à jour le contenue
+                        
                         $("#panierUtilisateurNb").html(data[1]); //Met à jour le contenue
                         
                         if(!modification){
@@ -1055,6 +1139,8 @@ function RemovePanier(idProduit,modification){
 
                             //Affiche le message de succès  
                             $("#qteHelp").html(sucessText);
+                        }else{
+                            $("#panierUtilisateur").html(data[0]); //Met à jour le contenue
                         }
 
                     }

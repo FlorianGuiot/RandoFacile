@@ -119,6 +119,27 @@ class panier{
 
 
     /**
+     * GetPrixTotalHT()
+     * Retourne le cout total HT du panier en float
+     * 
+     * @return float
+     */
+    public function GetPrixTotalHT(){
+        
+        $total = 0;
+
+        foreach($this->panier as $unP){
+
+            $total += $unP['produit']->CalculerMontantHT($unP['qte']);
+
+        }
+
+        return $total;
+
+    }
+
+
+    /**
      * EstDansLePanier($produit)
      * Retourne true si le produit mis en parametre se trouve dans le panier
      * 
@@ -155,15 +176,15 @@ class panier{
         foreach($this->panier as $unP){
             
 
-            $html .= '<div id="'.$unP['produit']->GetId().'"><a class="dropdown-item lignePanier" href="'.$unP['produit']->GetLienProduit().'"><img height="40" src="'.$unP['produit']->GetLiensImage()[0].'"> '.$unP['produit']->GetLibelle().
+            $html .= '<div id="'.$unP['produit']->GetId().'" class="dropdown-item lignePanier"><a class="lien" href="'.$unP['produit']->GetLienProduit().'"><img height="40" src="'.$unP['produit']->GetLiensImage()[0].'"> '.$unP['produit']->GetLibelle().'</a>'.
             '<div class="row mt-1">'.
             '<div class="col-6">'.
             '<input  id="qteProduitLignePanier" type="number"  class="form-control qteProduitLignePanier" value="'.$unP['qte'].'" max="'.$unP['produit']->GetQteEnStock().'" min="1">'.
             '</div>'.
-            '<div class="col-6">'.
-            '<button id="BtnRemoveLignePanier" class="btn btn-danger BtnRemoveLignePanier"><i class="fa-solid fa-trash"></i></button>   '.$unP['produit']->CalculerMontant($unP['qte']).'€'.
+            '<div class="col-6 overflow-hidden">'.
+            '<button id="BtnRemoveLignePanier" class="btn btn-sm btn-danger BtnRemoveLignePanier"><i class="fa-solid fa-trash"></i></button>   '.$unP['produit']->CalculerMontant($unP['qte']).'€'.
             '</div>'.
-            '</div></a></div>';
+            '</div></div>';
 
         }
         
