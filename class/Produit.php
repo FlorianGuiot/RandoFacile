@@ -130,7 +130,7 @@ class produit{
      */
     public function CalculerMontant($qte){
 
-        return number_format((float)($this->prix + ($this->prix * $this->tva)) * $qte, 2, '.', '');
+        return ($this->prix + ($this->prix * $this->tva)) * $qte;
 
     }
 
@@ -139,7 +139,7 @@ class produit{
      */
     public function CalculerMontantHT($qte){
 
-        return number_format((float)$this->prix * $qte, 2, '.', '');
+        return $this->prix * $qte;
 
     }
 

@@ -1,4 +1,6 @@
 <?php
+use Number\Utils;
+use Number\Utils\NombreFormatter;
 /**
  * Description de la class Panier
  * 
@@ -140,6 +142,19 @@ class panier{
 
 
     /**
+     * GetPrixTotalHT()
+     * Retourne le montant de la TVA du panier en float
+     * 
+     * @return float
+     */
+    public function GetMontantTVA(){
+    
+        return $this->GetPrixTotal() - $this->GetPrixTotalHT();
+
+    }
+
+
+    /**
      * EstDansLePanier($produit)
      * Retourne true si le produit mis en parametre se trouve dans le panier
      * 
@@ -171,7 +186,7 @@ class panier{
 
 
         $html = '<div class="d-flex justify-content-center m-2"><a href="index.php?controller=Panier&action=read" class="btn btn-primary">Mon panier</a></div>'. 
-                '<div class="d-flex justify-content-center"><p>Total : '.$this->GetPrixTotal().' €  TTC</p></div> <div class="panier-container">';
+                '<div class="d-flex justify-content-center"><p>Total : '.NombreFormatter::GetNombreFormatFr($this->GetPrixTotal()).' €  TTC</p></div> <div class="panier-container">';
 
         foreach($this->panier as $unP){
             
@@ -182,7 +197,7 @@ class panier{
             '<input  id="qteProduitLignePanier" type="number"  class="form-control qteProduitLignePanier" value="'.$unP['qte'].'" max="'.$unP['produit']->GetQteEnStock().'" min="1">'.
             '</div>'.
             '<div class="col-6 overflow-hidden">'.
-            '<button id="BtnRemoveLignePanier" class="btn btn-sm btn-danger BtnRemoveLignePanier"><i class="fa-solid fa-trash"></i></button>   '.$unP['produit']->CalculerMontant($unP['qte']).'€'.
+            '<button id="BtnRemoveLignePanier" class="btn btn-sm btn-danger BtnRemoveLignePanier"><i class="fa-solid fa-trash"></i></button>   '.NombreFormatter::GetNombreFormatFr($unP['produit']->CalculerMontant($unP['qte'])).'€'.
             '</div>'.
             '</div></div>';
 

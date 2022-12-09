@@ -1,3 +1,5 @@
+
+
 /*
 * form.js
 * RandoFacile
@@ -28,6 +30,13 @@ function CalculerMontantTotal(prix, qte){
     });
 
     return (total + (total * TVA)).toFixed(2);
+}
+
+//Retourne le montant de la TVA
+function CalculerTVA(prixTTC, prixHT){
+
+    
+    return (prixTTC - prixHT).toFixed(2);
 }
 
 function CalculerMontantTotalHT(prix, qte){
@@ -938,19 +947,26 @@ function GetAddPanierInfo(){
         $(parent).find(".prixTotalProduit").html(prixTotalProduit);
 
 
-        $("#prixTotalPanier").html(CalculerMontantTotal());
-        $("#prixTotalPanierHT").html(CalculerMontantTotalHT());
 
         if((qte >= qteMax) || (qte < qteMin) ){
 
             $(parent).find(".qteHelp").html("<span class='text-danger'>La quantité maximale a été atteinte.</span>");
+            $(event.target).val(qteMax);
 
         }else{
+
+            
+            $("#prixTotalPanier").html($.number(CalculerMontantTotal(),2, ',', ' ') + " € ");
+            $("#prixTotalPanierHT").html($.number(CalculerMontantTotalHT(),2, ',', ' ') + " € HT ");
+            $("#montantTVA").html($.number(CalculerTVA(CalculerMontantTotal(),CalculerMontantTotalHT()),2, ',', ' ') + " € ");
+
             $(parent).find(".qteHelp").html("");
             //Ajoute le produit au panier
             AddPanier(id,qte,true);
 
         }
+
+        
 
         
         

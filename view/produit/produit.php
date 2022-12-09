@@ -1,6 +1,8 @@
 <body>
 
 <?php
+use Number\Utils;
+use Number\Utils\NombreFormatter;
 
     require_once("./view/navbar/navbar.php"); // Navbar
 
@@ -96,7 +98,7 @@ if($page['produitExiste'] == true){
                 <div class="col-lg-3 col-md-6 order-lg-3 order-md-2">
 
                     <div class="border text-center">
-                        <p class="fs-3 text"><?php echo $produit->GetPrixUnitaire()."€" ?></p>
+                        <p class="fs-3 text"><?php echo NombreFormatter::GetNombreFormatFr($produit->GetPrixUnitaire())."€" ?></p>
                         <p class="text"><?php echo $produit->GetAffichageStock() ?></p>
                         <?php if($produit->EstEnStock() != -1){
 
