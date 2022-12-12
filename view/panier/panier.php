@@ -36,7 +36,7 @@ use Number\Utils\NombreFormatter;
                                             '<button id="BtnRemoveLignePanier" class="btn btn-danger BtnRemoveLignePanier"><i class="fa-solid fa-trash"></i></button>   '.
                                         '</div>'.
                                         '<div class="col-xl-12 col-sm-12 d-flex align-items-center">'.
-                                            '<p data-prix="'.NombreFormatter::GetNombreFormatFr($unP['produit']->GetPrixUnitaire()).'" data-prixht="'.NombreFormatter::GetNombreFormatFr($unP['produit']->GetPrixUnitaireHT()).'" class = "prixTotalProduit">'.NombreFormatter::GetNombreFormatFr($unP['produit']->CalculerMontant($unP['qte'])).'</p><p>€ TTC </p>'.
+                                            '<p data-prix="'.NombreFormatter::GetNombreDeuxChiffresVirgule($unP['produit']->GetPrixUnitaire()).'" data-prixht="'.NombreFormatter::GetNombreFormatFr($unP['produit']->GetPrixUnitaireHT()).'" class = "prixTotalProduit">'.NombreFormatter::GetNombreFormatFr($unP['produit']->CalculerMontant($unP['qte'])).'</p><p>€ TTC </p>'.
                                         '</div>'.
                                         '<div class="col-xl-12 col-sm-12 d-flex align-items-center">'.
                                             '<p class="qteHelp"></p>'.

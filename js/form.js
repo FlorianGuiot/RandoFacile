@@ -27,6 +27,7 @@ function CalculerMontantTotal(prix, qte){
         let prix = parseFloat($(this).find(".prixTotalProduit").data('prix'));
         let qte = parseInt($(this).find(".qteProduitLignePanier").val());
 
+
         total += prix * qte;
 
     });
@@ -56,7 +57,7 @@ function CalculerFraisDeLivraison(){
     let total = 0;
 
     $(".panierProduit").each(function() {
-        let prix = parseFloat($(this).find(".prixTotalProduit").data('prixht'));
+        let prix = parseFloat($(this).find(".prixTotalProduit").data('prix'));
         let qte = parseInt($(this).find(".qteProduitLignePanier").val());
 
         total += prix * qte;
@@ -66,6 +67,7 @@ function CalculerFraisDeLivraison(){
     if(total <= MIN_FRAIS_LIVRAISON){
 
         frais += FRAIS_LIVRAISON;
+
     }
 
     return frais;
@@ -980,7 +982,7 @@ function GetAddPanierInfo(){
         let qteMax = parseInt($(event.target).attr('max'));
         let qteMin= parseInt($(event.target).attr('min'));
         
-        prixTotalProduit = CalculerMontant(prix, qte);
+        prixTotalProduit = $.number(CalculerMontant(prix, qte),2, ',', ' ');
         $(parent).find(".prixTotalProduit").html(prixTotalProduit);
 
 

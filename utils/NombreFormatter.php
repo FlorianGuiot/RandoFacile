@@ -14,6 +14,17 @@ class NombreFormatter{
 
     }
 
+
+    /**
+     * Retourne le nombre avec deux chiffres après la virgule
+     * 
+     */
+    public static function GetNombreDeuxChiffresVirgule($nombre){
+
+        return number_format((float)$nombre, 2, '.', '');
+
+    }
+
 }
 
 
