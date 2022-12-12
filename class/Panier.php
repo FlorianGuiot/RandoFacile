@@ -11,7 +11,8 @@ use Number\Utils\NombreFormatter;
 class panier{
 
     protected array $panier = array();
-
+    protected float $minFraisLivraison = 50; //Montant minimal pour avoir la livraison gratuite
+    protected float $fraisLivraison = 10; //Frais de livraison
 
     /**
      * Constructeur de panier.
@@ -115,6 +116,12 @@ class panier{
 
         }
 
+        if($total != 0){
+
+            $total +=  $this->GetFraisLivraison();
+            
+        }
+
         return $total;
 
     }
@@ -136,6 +143,13 @@ class panier{
 
         }
 
+        if($total != 0){
+
+            $total +=  $this->GetFraisLivraison();
+
+        }
+        
+
         return $total;
 
     }
@@ -148,8 +162,39 @@ class panier{
      * @return float
      */
     public function GetMontantTVA(){
+
+        $tva = $this->GetPrixTotal() - $this->GetPrixTotalHT();
+        
+
+        return $tva;
+
+    }
+
+    /**
+     * GetFraisLivraison()
+     * Retourne le montant des frais de livraison
+     * 
+     * @return float
+     */
+    public function GetFraisLivraison(){
+
+        $frais = 0;
+
+        $total = 0;
+
+        foreach($this->panier as $unP){
+
+            $total += $unP['produit']->CalculerMontant($unP['qte']);
+
+        }
+
+        if($total <= $this->minFraisLivraison){
+
+           $frais += $this->fraisLivraison;
     
-        return $this->GetPrixTotal() - $this->GetPrixTotalHT();
+        }
+
+        return $frais;
 
     }
 
@@ -191,7 +236,7 @@ class panier{
         foreach($this->panier as $unP){
             
 
-            $html .= '<div id="'.$unP['produit']->GetId().'" class="dropdown-item lignePanier"><a class="lien" href="'.$unP['produit']->GetLienProduit().'"><img height="40" src="'.$unP['produit']->GetLiensImage()[0].'"> '.$unP['produit']->GetLibelle().'</a>'.
+            $html .= '<div id="'.$unP['produit']->GetId().'" class="dropdown-item lignePanier"><a class="lien " href="'.$unP['produit']->GetLienProduit().'"><img height="40" src="'.$unP['produit']->GetLiensImage()[0].'"> '.$unP['produit']->GetLibelle().'</a>'.
             '<div class="row mt-1">'.
             '<div class="col-6">'.
             '<input  id="qteProduitLignePanier" type="number"  class="form-control qteProduitLignePanier" value="'.$unP['qte'].'" max="'.$unP['produit']->GetQteEnStock().'" min="1">'.

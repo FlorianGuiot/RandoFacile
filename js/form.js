@@ -10,11 +10,13 @@
 * @auteur: F.GUIOT
 */
 const TVA = 0.20;
+const MIN_FRAIS_LIVRAISON = 50;
+const FRAIS_LIVRAISON = 10;
 
 function CalculerMontant(prix, qte){
 
     
-    return ((prix +(prix * TVA)) * qte).toFixed(2);
+    return (prix * qte).toFixed(2);
 }
 
 function CalculerMontantTotal(prix, qte){
@@ -29,14 +31,44 @@ function CalculerMontantTotal(prix, qte){
 
     });
 
-    return (total + (total * TVA)).toFixed(2);
+    if( total != 0){
+        total += CalculerFraisDeLivraison();
+    }
+    
+
+    return (total).toFixed(2);
 }
 
 //Retourne le montant de la TVA
 function CalculerTVA(prixTTC, prixHT){
 
+    let tva = (prixTTC - prixHT);
+
     
-    return (prixTTC - prixHT).toFixed(2);
+    return tva.toFixed(2);
+}
+
+
+function CalculerFraisDeLivraison(){
+
+    let frais = 0;
+
+    let total = 0;
+
+    $(".panierProduit").each(function() {
+        let prix = parseFloat($(this).find(".prixTotalProduit").data('prixht'));
+        let qte = parseInt($(this).find(".qteProduitLignePanier").val());
+
+        total += prix * qte;
+
+    });
+
+    if(total <= MIN_FRAIS_LIVRAISON){
+
+        frais += FRAIS_LIVRAISON;
+    }
+
+    return frais;
 }
 
 function CalculerMontantTotalHT(prix, qte){
@@ -44,12 +76,17 @@ function CalculerMontantTotalHT(prix, qte){
     let total = 0;
 
     $(".panierProduit").each(function() {
-        let prix = parseFloat($(this).find(".prixTotalProduit").data('prix'));
+        let prix = parseFloat($(this).find(".prixTotalProduit").data('prixht'));
         let qte = parseInt($(this).find(".qteProduitLignePanier").val());
 
         total += prix * qte;
 
     });
+
+    if( total != 0){
+        total += CalculerFraisDeLivraison();
+    }
+    
 
     return total.toFixed(2);
 }
@@ -960,6 +997,16 @@ function GetAddPanierInfo(){
             $("#prixTotalPanierHT").html($.number(CalculerMontantTotalHT(),2, ',', ' ') + " € HT ");
             $("#montantTVA").html($.number(CalculerTVA(CalculerMontantTotal(),CalculerMontantTotalHT()),2, ',', ' ') + " € ");
 
+            if(CalculerMontantTotalHT() <= MIN_FRAIS_LIVRAISON){
+
+                $("#montantFraisLivraison").html($.number(CalculerTVA(FRAIS_LIVRAISON),2, ',', ' ') + " € ");
+
+            }else{
+
+                $("#montantFraisLivraison").html("Livraison offerte !");
+
+            }
+
             $(parent).find(".qteHelp").html("");
             //Ajoute le produit au panier
             AddPanier(id,qte,true);
@@ -1098,9 +1145,25 @@ function GetRemovePanierInfo(){
         
         //Récupère l'id du produit
         let id = $(parent).data('id');
+        
+        
+
+        $("#prixTotalPanier").html($.number(CalculerMontantTotal(),2, ',', ' ') + " € ");
+        $("#prixTotalPanierHT").html($.number(CalculerMontantTotalHT(),2, ',', ' ') + " € HT ");
+        $("#montantTVA").html($.number(CalculerTVA(CalculerMontantTotal(),CalculerMontantTotalHT()),2, ',', ' ') + " € ");
+
+        if(CalculerMontantTotalHT() <= MIN_FRAIS_LIVRAISON){
+
+            $("#montantFraisLivraison").html($.number(CalculerTVA(FRAIS_LIVRAISON),2, ',', ' ') + " € ");
+
+        }else{
+
+            $("#montantFraisLivraison").html("Livraison offerte !");
+
+        }
 
         $(parent).html("Produit supprimé");
-        
+
         RemovePanier(id,true);
         
     });

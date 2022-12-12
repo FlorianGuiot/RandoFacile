@@ -36,7 +36,7 @@ use Number\Utils\NombreFormatter;
                                             '<button id="BtnRemoveLignePanier" class="btn btn-danger BtnRemoveLignePanier"><i class="fa-solid fa-trash"></i></button>   '.
                                         '</div>'.
                                         '<div class="col-xl-12 col-sm-12 d-flex align-items-center">'.
-                                            '<p data-prix="'.$unP['produit']->GetPrixUnitaire().'" class = "prixTotalProduit">'.$unP['produit']->CalculerMontant($unP['qte']).'</p><p>€ TTC </p>'.
+                                            '<p data-prix="'.NombreFormatter::GetNombreFormatFr($unP['produit']->GetPrixUnitaire()).'" data-prixht="'.NombreFormatter::GetNombreFormatFr($unP['produit']->GetPrixUnitaireHT()).'" class = "prixTotalProduit">'.NombreFormatter::GetNombreFormatFr($unP['produit']->CalculerMontant($unP['qte'])).'</p><p>€ TTC </p>'.
                                         '</div>'.
                                         '<div class="col-xl-12 col-sm-12 d-flex align-items-center">'.
                                             '<p class="qteHelp"></p>'.
@@ -53,8 +53,8 @@ use Number\Utils\NombreFormatter;
                 endforeach;
             }else{
 
-                echo '<div class="d-flex justify-content-center align-items-center"><div class="row"><p class="prix">Votre panier est vide...</p></div>'.
-                    '<div class="row"><p class="prix">Il est temps de faire des achats</p></div></div>';
+                echo '<div class="row"><div class="col-12 d-flex justify-content-center align-items-center"><p class="prix">Votre panier est vide...</p></div>'.
+                    '<div class="col-12 d-flex justify-content-center align-items-center"><p class="prix">Il est temps de faire des achats</p></div></div>';
 
             }
 
@@ -68,14 +68,17 @@ use Number\Utils\NombreFormatter;
                 <p class="text-center "><span id="prixTotalPanierHT" class="prix-ht"><?php  echo  NombreFormatter::GetNombreFormatFr($lePanier->GetPrixTotalHT()) ?> € HT</span></p>
                 
                 <p class="">TVA : <span id="montantTVA" class="prix-ht"><?php  echo  NombreFormatter::GetNombreFormatFr($lePanier->GetMontantTVA()) ?> €</span> <span id="montantTVA" class="prix-ht"> ( 20% )</span></p>
-
-                <div class="mb-3 form-check">
-                    <input type="checkbox" class="form-check-input" id="exampleCheck1">
-                    <label class="form-check-label" for="exampleCheck1">J'ai lu et j'accepte les <a href='#' class='lien'>conditions générales de vente</a>.</label>
-                </div>
-                <div class="text-center m-2">
-                    <button id="BtnValiderPanier" type="submit" class="btn btn-lg btn-primary">Valider et payer</button>
-                </div>
+                <p class="">Frais de livraison : <span id="montantFraisLivraison" class="prix-ht"><?php  if($lePanier->GetFraisLivraison() == 0){echo "Livraison offerte !"; }else{ echo  NombreFormatter::GetNombreFormatFr($lePanier->GetFraisLivraison()) ." €"; } ?> </p>
+                <p class="validerHelp text-danger shake"><?php if (isset($params["erreur_valider"])){ echo $params["erreur_valider"]; } ?></p>
+                <form id="validerPanier" action="index.php?controller=Panier&action=Valider" method="POST">
+                    <div class="mb-3 form-check">
+                        <input type="checkbox" class="form-check-input" id="checkbox_CGV" name="checkbox_CGV" value="true">
+                        <label class="form-check-label" for="checkbox_CGV">J'ai lu et j'accepte les <a href='index.php?controller=Info&action=readCGV' class='lien'>conditions générales de vente</a>.</label>
+                    </div>
+                    <div class="text-center m-2">
+                        <button id="BtnValiderPanier" type="submit" class="btn btn-lg btn-primary">Valider et payer</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>

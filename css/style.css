@@ -11,6 +11,7 @@
 
 body{
 
+    min-height: 800px;
     font-family: 'Raleway', sans-serif !important;
 
 }
@@ -141,6 +142,11 @@ body{
     border-color: #467f3a !important;
   }
 
+
+.text-justifie{
+    text-align: justify;
+}
+
 /*
 ================================
             Scrollbar
@@ -243,14 +249,23 @@ body{
 
 }
 
+
 .recherche-container{
 
-    width: 50%;
+    width: 50% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    
+}
+
+.recherche-barre{
+
+    width: 100%;
     display: flex;
     flex-direction: row;
     align-items: center;
     
-
 
 }
 
@@ -361,77 +376,96 @@ body{
     font-size: 13px;
 }
 
+/*Pour tous les appareils équipés d'écrans et dont la taille est inférieure à 991px*/
+@media screen and (max-width: 991px) { 
 
-/* Navbar téléphone */
-.navbackgroundtel{
-    background-color:#467f3a;
-    color: white;
-    display: flex;
-    flex-direction: column;
-    align-content: center;
-}
+    .logocontainer{
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+        width: 100% !important;
+        height: auto !important;
+    }
 
-.navbackgroundtel a{
-    color: white;
-    text-decoration: none;
-}
+    .logo{
+        justify-content: center !important;
+        text-align: center !important;
+        align-items: center !important;
+        padding-top: 0% !important;
+        padding-bottom: 0% !important;
+        padding-left: 0% !important;
+        margin-left: 0% !important;
+    
+    }
 
-.navbackgroundtel a:hover{
-    color: rgb(179, 179, 179);
-    text-decoration: none;
-}
+    .navbackground{
+        height: 10%;
+        background-color:#467f3a;
+        color: white;
+        display: block !important;
+        min-height: 30% !important;
+    }
 
-.logotel{
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-}
+    .recherche-container{
 
-.panier-container-tel{
-    width: 30%;
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-}
+        
+        width: 100% !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        
+    }
 
-.panier-button-container-tel{
-    width: 20%;
-    margin-left: 25%;
-}
+    .search-button-container{
+        margin:3% !important;
+        display: flex;
+        justify-content: center;
+        width: 10%;
+    }
 
-.search-container-tel{
-    display: flex;
-    justify-content: center;
-    width: 60%;
-}
+    .recherche-barre{
 
-.vide-container-tel{
-    width: 20%;
-}
 
-.panier-search-container-tel{
-    display: flex;
-    width: 20%;
-}
+        margin: 1% !important;
+        width: 70% !important;
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+        
+    }
 
-.recherchetel{
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    width: 100%;
-}
+    .search{
+        display: flex !important;
+        justify-content: center !important;
+        width: 100%;
+        border-radius: 15px 15px 15px 15px;
+        border-color: white;
+        background-color: var(--second_color);
+        color: white;
+    
+    }
 
-.searchtel{
-    padding: 2%;
-    width: 100%;
-    height: 10%;
-}
+    .panierlogin{
+        width: 100% !important;
+        display: flex;
+        justify-content: space-around;
+    }
 
-.search-button-container-tel{
-    width: 10%;
-    display: flex;
-    justify-content: flex-start;
+    .connexion{
+        width:50% !important;
+        margin-left: 0% !important;
+        display: flex;
+        flex-direction: row;
+    }
+
+    .panier-button-container{
+        display: flex;
+
+        justify-content: flex-end !important;
+        padding: 1% !important;
+        margin-right: 5%;
+        width: 50% !important;
+    }
 }
 
 .search-button{
@@ -441,13 +475,6 @@ body{
     height: 50px;
 }
 
-.panierlogintel{
-    display: flex;
-    flex-direction: row;
-    width: 100%;
-    justify-content: center;
-
-}
 
 .navbackground2{
     background-color:#26501d;
@@ -464,7 +491,7 @@ body{
     background-color: #467f3a;
     display: flex;
     justify-content: space-between;
-    padding-top: 3%;
+    padding-top: 1%;
     padding-left: 3%;
     padding-right: 3%;
     padding-bottom: 1%;
@@ -662,10 +689,15 @@ body{
 
     width: 18rem;
 }
-@media screen and (max-width: 1024px) { 
+@media screen and (max-width: 1400px) { 
 
     .card-taille{
-        width:15rem;
+        width:5rem;
+    
+    }
+
+    .card-img-top{
+        width:25% !important;
     
     }
 }

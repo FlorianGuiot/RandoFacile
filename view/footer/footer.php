@@ -5,19 +5,29 @@
 <div class="footer-background">
 
     <div class="">
-        <a href="./index.php"><img src="img/logo.png" height="80"></a>
+        <a href="./index.php"><img src="img/logo.png" width="30%" height="auto"></a>
         <p>©2022 Rando Facile tous droits réservé</p>
     </div>
 
     <div class="">
+        <p class="fs-4 text">Informations</p>
         <ul>
-            <li><a href="">Chaussures</a></li>
-            <li><a href="">Vestes</a></li>
-            <li><a href="">Sacs à dos</a></li>
-            <li><a href="">Sacs de couchage</a></li>
-            <li><a href="">Tentes</a></li>
+            <li><a href="">Qui sommes nous ?</a></li>
+            <li><a href="index.php?controller=Info&action=readCGV">Conditions générales de vente</a></li>
         </ul>
     </div>
+
+    <div class="">
+        <p class="fs-4 text">Produits</p>
+        <ul>
+            <li><a href="index.php?controller=Recherche&action=read&idCateg=4">Chaussures</a></li>
+            <li><a href="index.php?controller=Recherche&action=read&idCateg=3">Vestes</a></li>
+            <li><a href="index.php?controller=Recherche&action=read&idCateg=5">Sacs à dos</a></li>
+            <li><a href="index.php?controller=Recherche&action=read&idCateg=1">Sacs de couchage</a></li>
+            <li><a href="index.php?controller=Recherche&action=read&idCateg=2">Tentes</a></li>
+        </ul>
+    </div>
+
 </div>
 
 

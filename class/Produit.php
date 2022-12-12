@@ -121,6 +121,15 @@ class produit{
      */
     public function GetPrixUnitaire(){
 
+        return $this->prix + ($this->prix * $this->tva);
+
+    }
+
+    /**
+     * Retourne le prix unitaire.
+     */
+    public function GetPrixUnitaireHT(){
+
         return $this->prix;
 
     }

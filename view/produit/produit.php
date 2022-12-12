@@ -92,7 +92,7 @@ if($page['produitExiste'] == true){
 
                 <!--Affichage ordinateur-->
                 <div class="col-9">
-                    <p class="fs-6 text d-none d-none d-lg-block"><?php echo $produit->GetDescription() ?></p>
+                    <p class="fs-6 text-justifie text d-none d-none d-lg-block"><?php echo $produit->GetDescription() ?></p>
                 </div>
                 
                 <div class="col-lg-3 col-md-6 order-lg-3 order-md-2">
