@@ -982,7 +982,7 @@ function GetAddPanierInfo(){
         let qteMax = parseInt($(event.target).attr('max'));
         let qteMin= parseInt($(event.target).attr('min'));
         
-        prixTotalProduit = $.number(CalculerMontant(prix, qte),2, ',', ' ');
+        prixTotalProduit = $.number(CalculerMontant(prix,qte),2, ',', ' ');
         $(parent).find(".prixTotalProduit").html(prixTotalProduit);
 
 
@@ -1149,6 +1149,9 @@ function GetRemovePanierInfo(){
         let id = $(parent).data('id');
         
         
+        $(parent).html("Produit supprimé");
+        $(parent).removeClass("panierProduit");
+
 
         $("#prixTotalPanier").html($.number(CalculerMontantTotal(),2, ',', ' ') + " € ");
         $("#prixTotalPanierHT").html($.number(CalculerMontantTotalHT(),2, ',', ' ') + " € HT ");
@@ -1163,8 +1166,6 @@ function GetRemovePanierInfo(){
             $("#montantFraisLivraison").html("Livraison offerte !");
 
         }
-
-        $(parent).html("Produit supprimé");
 
         RemovePanier(id,true);
         
