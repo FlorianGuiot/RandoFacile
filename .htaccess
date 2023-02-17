@@ -3,9 +3,30 @@ Options +FollowSymlinks
 RewriteEngine on
 
 # map neat URL to internal URL
+RewriteRule ^recherche/categorie/([0-9]+)/p/([0-9]+)/$   index.php?controller=Recherche&action=read&idCateg=$1&numPage=$2 [nc,qsa]
 RewriteRule ^recherche/categorie/([0-9]+)/$   index.php?controller=Recherche&action=read&idCateg=$1 [nc,qsa]
-RewriteRule ^recherche/([A-Z]+)/$   index.php?controller=Recherche&action=read&recherche=$1 [nc,qsa]
-RewriteRule ^recherche/([A-Z]+)/article/([0-9]+)/$   index.php?controller=Produit&action=read&idProduit=$2&recherche=$1 [nc,qsa]
+RewriteRule ^recherche/([\w\s]+)/$   index.php?controller=Recherche&action=read&recherche=$1 [B,PT]
+RewriteRule ^recherche/([\w\s]+)/p/([0-9]+)/$   index.php?controller=Recherche&action=read&recherche=$1&numPage=$2 [B,PT]
+RewriteRule ^recherche/([\w\s]+)/article/([0-9]+)/$   index.php?controller=Produit&action=read&idProduit=$2&recherche=$1 [B,PT]
 RewriteRule ^categorie/([0-9]+)/article/([0-9]+)/$   index.php?controller=Produit&action=read&idProduit=$2&idCateg=$1 [nc,qsa]
 
+RewriteRule ^produit/commentaire/post/$ index.php?controller=Produit&action=PostCommentaire [nc,qsa]
+
+RewriteRule ^cgv/$ index.php?controller=Info&action=readCGV [nc] 
+
+RewriteRule ^connexion/$ index.php?controller=Login&action=connexion [nc]
+RewriteRule ^deconnexion/$  index.php?controller=Login&action=disconnect [nc]
+
+RewriteRule ^panier/ajouter/$ index.php?controller=Panier&action=AddPanier [nc]
+RewriteRule ^panier/supprimer/$ index.php?controller=Panier&action=RemovePanier [nc]
+RewriteRule ^panier/affichage/$ index.php?controller=Panier&action=AffichagePanier [nc]
+
+RewriteRule ^panier/$   index.php?controller=Panier&action=read [nc]
+RewriteRule ^commande/adresse/$   index.php?controller=Paiement&action=readAdresse [nc]
+RewriteRule ^commande/paiement/$   index.php?controller=Paiement&action=readPaiement [nc]
+RewriteRule ^commande/paiement/valider/$   index.php?controller=Paiement&action=testPaiement [nc]
+
 ErrorDocument 404 http://localhost/Randofacile/index.php?controller=Erreur&action=read404
+
+
+

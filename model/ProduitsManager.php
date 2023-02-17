@@ -43,7 +43,9 @@ class ProduitsManager {
         $result->execute();
         while($result_produit=$result->fetch()){
 
-            array_push($lesProduits, new produit($result_produit['id'],$result_produit['libelle'],$result_produit['resume'],$result_produit['description'],$result_produit['path_photo'],$result_produit['path_photo_2'],$result_produit['path_photo_3'],$result_produit['path_photo_4'],$result_produit['dateajout'],$result_produit['qte_stock'],$result_produit['prix_vente_uht'], new categorie($result_produit['codecateg'],$result_produit['libelleCateg'])) );
+            $produit =  new produit($result_produit['id'],$result_produit['libelle'],$result_produit['resume'],$result_produit['description'],$result_produit['path_photo'],$result_produit['path_photo_2'],$result_produit['path_photo_3'],$result_produit['path_photo_4'],$result_produit['dateajout'],$result_produit['qte_stock'],$result_produit['prix_vente_uht'], new categorie($result_produit['codecateg'],$result_produit['libelleCateg']));
+            $produit->SetNoteMoyenne(self::getNoteMoyenneProduit($produit)); //Rajoute la note moyenne au produit
+            array_push($lesProduits, $produit);
         
         }
 
@@ -355,7 +357,7 @@ class ProduitsManager {
 
         // Récupération de la moyenne.
 
-        $sql = "SELECT AVG(note) as note FROM commentaire WHERE idProduit = :idProduit AND estVisible = 1 AND note IS NOT NULL";
+        $sql = "SELECT AVG(note) as note FROM commentaire WHERE idProduit = :idProduit AND estVisible = 1 AND note IS NOT NULL AND note > 0";
         $resultProduit=DbManager::$cnx->prepare($sql);
         $resultProduit->bindParam(':idProduit', $idProduit, PDO::PARAM_INT);
         $resultProduit->execute();

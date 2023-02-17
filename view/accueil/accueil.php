@@ -1,6 +1,9 @@
+
 <body>
 
     <?php
+        use Number\Utils;
+        use Number\Utils\NombreFormatter;
         require_once("./view/navbar/navbar.php"); // Navbar
     ?>
     <!--Banniere-->
@@ -34,38 +37,51 @@
 // Affichage des articles
 foreach($lesNouveautés as $unProduit){
 
+    $nbrCommentaires = ProduitsManager::getNbrCommentaires($unProduit);
+    $nbrNotes = ProduitsManager::getNbrNotes($unProduit);
+
+    // Lien du produit
+    $lienProduit = SERVER_URL."/categorie/".$unProduit->GetCategorie()->GetId()."/article/".$unProduit->GetId()."/";
 ?>
 
-        <div class="col-xxl-3 col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs-12">
-            <div class="card text-center mx-auto shadow-lg bg-white rounded card-taille w-100">
-                <a href=""><?php echo "<img class='card-img-top' src= '".$unProduit->GetLiensImage()[0]."'>";?></a>
-                <div class="card-body">
-                    <a href="" class="lien-article"><h5 class="card-title">
-                        <?php
-                            echo $unProduit->GetLibelle();
-                        ?>
-                    </h5></a>
-                    <p class="" style='font-size:13px'>
-                        <?php
-                            echo $unProduit->GetResume();
-                        ?>
-                    </p>
-                    <p class="categorie">
-                        <?php
-                            echo $unProduit->GetCategorie()->GetLibelle();
-                        ?>
-                    </p>
-                    <p class="prix">
+    <div class="col-xxl-3 col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs-12 pb-2">
+        <div class="card text-center mx-auto shadow-lg bg-white rounded">
+            <a href="<?php echo $lienProduit ?>"><?php echo "<img class='card-img-top' src= '".$unProduit->GetLiensImage()[0]."'>";?></a>
+            <div class="card-body">
+                <a href="<?php echo $lienProduit ?>" class="lien-article"><h5 class="card-title text-truncate">
                     <?php
-                            echo $unProduit->GetPrixUnitaire()." €";
-                        ?> 
-                    </p>
-                </div>
+                        echo $unProduit->GetLibelle();
+                    ?>
+                </h5></a>
+                <p class="card-text fs-7 text-truncate">
+                    <?php
+                        echo $unProduit->GetResume();
+                    ?>
+                </p>
+                <p class="categorie">
+                    <?php
+
+                        echo $unProduit->GetCategorie()->GetLibelle();
+                        
+
+                    ?>
+                </p>
+                <p class="prix">
+                <?php
+                        echo "<div class='row'><span class='fs-5'>".NombreFormatter::GetNombreFormatFr($unProduit->GetPrixUnitaire())." € </span></div>";
+                        echo "<div class='row'><div class='col-12'><span class='rating_checked'>".$unProduit->GetNoteMoyenne()." </span>" ."<span class='fa fa-star rating_checked'></span><span class='nbComments'>(" . $nbrNotes ."<span class='fa fa-star'></span>, ". $nbrCommentaires ."<span class='fa fa-message'></span> )</span></div></div>";
+                    ?> 
+                </p>
             </div>
         </div>
+    </div>
+
+
+
 <?php
 }
 ?>
+
  </div>
 </div>
 

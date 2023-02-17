@@ -70,13 +70,13 @@ use Number\Utils\NombreFormatter;
                 <p class="">TVA : <span id="montantTVA" class="prix-ht"><?php  echo  NombreFormatter::GetNombreFormatFr($lePanier->GetMontantTVA()) ?> €</span> <span id="montantTVA" class="prix-ht"> ( 20% )</span></p>
                 <p class="">Frais de livraison : <span id="montantFraisLivraison" class="prix-ht"><?php  if($lePanier->GetFraisLivraison() == 0){echo "Livraison offerte !"; }else{ echo  NombreFormatter::GetNombreFormatFr($lePanier->GetFraisLivraison()) ." €"; } ?> </p>
                 <p class="validerHelp text-danger shake"><?php if (isset($params["erreur_valider"])){ echo $params["erreur_valider"]; } ?></p>
-                <form id="validerPanier" action="index.php?controller=Panier&action=Valider" method="POST">
+                <form id="validerPanier" action=<?php echo SERVER_URL."/commande/adresse/"?> method="POST">
                     <div class="mb-3 form-check">
                         <input type="checkbox" class="form-check-input" id="checkbox_CGV" name="checkbox_CGV" value="true">
-                        <label class="form-check-label" for="checkbox_CGV">J'ai lu et j'accepte les <a href='index.php?controller=Info&action=readCGV' class='lien'>conditions générales de vente</a>.</label>
+                        <label class="form-check-label" for="checkbox_CGV">J'ai lu et j'accepte les <a href=<?php echo SERVER_URL."/cgv/" ?> class='lien'>conditions générales de vente</a>.</label>
                     </div>
                     <div class="text-center m-2">
-                        <button id="BtnValiderPanier" type="submit" class="btn btn-lg btn-primary">Valider et payer</button>
+                        <button id="BtnValiderPanier" type="submit" class="btn btn-lg btn-primary">Passer commande</button>
                     </div>
                 </form>
             </div>

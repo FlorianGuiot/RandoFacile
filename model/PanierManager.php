@@ -34,7 +34,7 @@ class PanierManager {
 
         $lePanier = new panier();
 
-        // Récupération des commentaires.
+        // Récupération des lignes panier.
         $sql = "select idProduit,qte,DateAjout FROM Panier WHERE idUser = :id";
         $resultPanier=DbManager::$cnx->prepare($sql);
         $resultPanier->bindParam(':id', $idUser, PDO::PARAM_INT);

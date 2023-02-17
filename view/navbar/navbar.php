@@ -31,7 +31,7 @@ $recherche = '';
 
 ?>
 
-<form id="form-search" action="" method="GET" class="navbar-container">
+<form id="form-search" action="<?php echo SERVER_URL."/index/" ?>" method="GET" class="navbar-container">
 <!--Navbar pour ordinateur-->
 <div class="">
 
@@ -39,7 +39,7 @@ $recherche = '';
 
         <div class="logocontainer">
             <div class="logo">
-                <a href="index"><img src="./img/logo.png" width="30%" height="auto"></a>
+                <a href=<?php echo SERVER_URL."/" ?>><img src=<?php echo SERVER_URL."/img/logo.png"?> width="30%" height="auto"></a>
             </div>
         </div>
         
@@ -70,7 +70,7 @@ $recherche = '';
                 <!--Bouton recherche sur téléphone-->
                 <div class="search-button-container d-lg-none">
                     <button type="submit" class="search-button" name="searchbutton" id="searchbutton">
-                        <a <?php echo "href='index.php?controller=Recherche&action=read&recherche='".$recherche;?>>
+                        <a <?php echo "href='".SERVER_URL."/recherche/'".$recherche;?>>
                             <img class="search-button-img" src="img/loupe.png">
                         </a>
                     </button>
@@ -85,8 +85,8 @@ $recherche = '';
             <!--Bouton recherche sur ordinateur-->
             <div class="search-button-container d-none d-lg-block">
                 <button type="submit" class="search-button" name="searchbutton" id="searchbutton">
-                    <a <?php echo "href='index.php?controller=Recherche&action=read&recherche='".$recherche;?>>
-                        <img class="search-button-img" src="img/loupe.png">
+                    <a <?php echo "href='".SERVER_URL."/recherche/'".$recherche."/";?>>
+                        <img class="search-button-img" src=<?php echo SERVER_URL."/img/loupe.png"?>>
                     </a>
                 </button>
             </div>
@@ -132,7 +132,7 @@ $recherche = '';
             <div class="panier-button-container">
                     <div class="dropdown">
                             <button type="button" id="dropdownMenuPanier" class="panier-button dropdown-toggle" style="color:white;" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <img class="panier-button-img" src="img/panier.png">
+                                <img class="panier-button-img" src=<?php echo SERVER_URL."/img/panier.png"?>>
                                 <p  id="panierUtilisateurNb" class="panier-texte-nombre <?php echo $_SESSION['panier_nbArticlesVisible'] ?> "><?php echo $_SESSION['panier_nbArticles'];?></p>
                             </button>
 
@@ -164,23 +164,23 @@ $recherche = '';
         <ul class="navbar-nav mx-auto">
 
             <li class="nav-item">
-                <a class="nav-link px-5" href="index.php?controller=Recherche&action=read&idCateg=4">Chaussures</a>
+                <a class="nav-link px-5" href=<?php echo SERVER_URL."/recherche/categorie/4/" ?>>Chaussures</a>
             </li>
 
             <li class="nav-item">
-                <a class="nav-link px-5" href="index.php?controller=Recherche&action=read&idCateg=3">Vestes</a>
+                <a class="nav-link px-5" href=<?php echo SERVER_URL."/recherche/categorie/3/" ?>>Vestes</a>
             </li>
 
             <li class="nav-item">
-                <a class="nav-link px-5 " href="index.php?controller=Recherche&action=read&idCateg=5">Sacs à dos</a>
+                <a class="nav-link px-5 " href=<?php echo SERVER_URL."/recherche/categorie/5/" ?>>Sacs à dos</a>
             </li>
 
             <li class="nav-item">
-                <a class="nav-link px-5 " href="index.php?controller=Recherche&action=read&idCateg=1">Sacs de couchage</a>
+                <a class="nav-link px-5 " href=<?php echo SERVER_URL."/recherche/categorie/1/" ?>>Sacs de couchage</a>
             </li>
 
             <li class="nav-item">
-                <a class="nav-link px-5 " href="index.php?controller=Recherche&action=read&idCateg=2">Tentes</a>
+                <a class="nav-link px-5 " href=<?php echo SERVER_URL."/recherche/categorie/2/" ?>>Tentes</a>
             </li>
 
         </ul>

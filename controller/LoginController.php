@@ -188,7 +188,7 @@ class LoginController{
         //Si il n'y a pas d'erreur lors de la première étape
         if($erreur == ""){ 
 
-            if(strlen($_POST['nom']) <= 0 || strlen($_POST['prenom']) <= 0){
+            if(!isset($_POST['nom']) || strlen(trim($_POST['nom'])) <= 0 || !isset($_POST['prenom']) || strlen(trim($_POST['prenom'])) <= 0){
 
                 $erreur = 'Nom ou prénom non rempli';
 
@@ -202,7 +202,7 @@ class LoginController{
                 $params['nom'] = $_POST['nom'];
                 $params['prenom'] = $_POST['prenom'];
                 $params['dateNaissance'] = $_POST['dateNaissance'];
-                $params['email'] = $_POST['email'];
+                $params['email'] = strtolower($_POST['email']);
                 $params['password'] = $_POST['password'];
 
                 if($params['dateNaissance'] == null){

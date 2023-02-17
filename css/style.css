@@ -147,6 +147,10 @@ body{
     text-align: justify;
 }
 
+.fs-7{
+    font-size: 13px;
+}
+
 /*
 ================================
             Scrollbar
@@ -1019,4 +1023,6 @@ body{
 }
 
 
-
+.bs-example{
+    margin: 20px;
+}

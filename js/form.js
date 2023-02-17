@@ -9,9 +9,16 @@
 *
 * @auteur: F.GUIOT
 */
+const SERVER_URL = "/Randofacile";
+
+
 const TVA = 0.20;
 const MIN_FRAIS_LIVRAISON = 50;
 const FRAIS_LIVRAISON = 10;
+
+function isEmptyOrSpaces(str){
+    return str === null || str.match(/^ *$/) !== null;
+}
 
 function CalculerMontant(prix, qte){
 
@@ -245,7 +252,7 @@ function validationConnexion(){
             
             
             $.ajax({
-                url:'index.php?controller=Login&action=connexion',
+                url: SERVER_URL+'/connexion/',
                 type:'post',
                 data:{email:email,password:password},
                 success:function(response){
@@ -283,7 +290,7 @@ function disconnect(){
         
         
     $.ajax({
-        url:'index.php?controller=Login&action=disconnect',
+        url: SERVER_URL+'/deconnexion/',
         type:'get',
         success:function(nom){
             
@@ -651,6 +658,7 @@ function CommentaireInfo(){
             var commentaire = document.forms["form-commentaire"].elements["commentaire"].value;
 
             var commentaireValide = false;
+            let note = GetStarsRating();
 
             /*Validation commentaire */
 
@@ -661,6 +669,11 @@ function CommentaireInfo(){
 
             else if(commentaire.length > nbrMax){
                 document.getElementById("CommentaireHelp").innerHTML = '<p>Vous ne pouvez pas poster un avis de plus de '+nbrMax+' caractères.</p>';
+                commentaireValide = false;
+            }
+
+            else if(note <= 0 || note > 5){
+                document.getElementById("CommentaireHelp").innerHTML = '<p>Vous devez laisser une note à l\'article.</p>';
                 commentaireValide = false;
             }
 
@@ -676,11 +689,11 @@ function CommentaireInfo(){
                 
                 const infoProduit = document.querySelector("#info-produit");
                 let idProduit = infoProduit.dataset.id;
-                let note = GetStarsRating();
+                
             
 
                 $.ajax({
-                    url:'index.php?controller=Produit&action=PostCommentaire',
+                    url: SERVER_URL+'/produit/commentaire/post/',
                     type:'post',
                     data:{commentaire:commentaire,idProduit:idProduit,note:note},
                     success:function(response){
@@ -786,7 +799,7 @@ function editButtonCommentaire(){
                 commentaireValide = true;
             }
 
-
+  
             /* Envoie */
 
             if(commentaireValide == true){
@@ -1001,7 +1014,7 @@ function GetAddPanierInfo(){
 
             if(CalculerMontantTotalHT() <= MIN_FRAIS_LIVRAISON){
 
-                $("#montantFraisLivraison").html($.number(CalculerTVA(FRAIS_LIVRAISON),2, ',', ' ') + " € ");
+                $("#montantFraisLivraison").html($.number(CalculerFraisDeLivraison(),2, ',', ' ') + " € ");
 
             }else{
 
@@ -1047,7 +1060,7 @@ function AddPanier(idProduit,qte,modification){
 
 
     $.ajax({
-        url:'index.php?controller=Panier&action=AddPanier',
+        url: SERVER_URL+'/panier/ajouter/',
         type:'post',
         data:{idProduit:idProduit,qte:qte},
         success:function(response){
@@ -1057,7 +1070,7 @@ function AddPanier(idProduit,qte,modification){
                     
                 // Met à jour l'affichage du panier       
                 $.ajax({
-                    url:'index.php?controller=Panier&action=AffichagePanier',
+                    url:SERVER_URL+'/panier/affichage/',
                     type:'get',
                     dataType: 'json',
                     success:function(data){
@@ -1080,7 +1093,8 @@ function AddPanier(idProduit,qte,modification){
                         if(modification == false){
                             $("#panierUtilisateur").html(data[0]); //Met à jour le contenue
                             //Affiche le message de succès  
-                            $("#qteHelp").html(sucessText);
+                            $("#notification_success").toast("show");
+                            $("#notifitication_s_body").html(sucessText);
                         }
                     }
                 });
@@ -1089,7 +1103,10 @@ function AddPanier(idProduit,qte,modification){
 
                 if(modification == false){
                     //Affiche le message d'erreur 
-                    $("#qteHelp").html(errorText);
+                    $("#notification_success").toast("show");
+                    $("#notifitication_s_body").html(errorText);
+                    
+                
                 }
                 
 
@@ -1159,7 +1176,7 @@ function GetRemovePanierInfo(){
 
         if(CalculerMontantTotalHT() <= MIN_FRAIS_LIVRAISON){
 
-            $("#montantFraisLivraison").html($.number(CalculerTVA(FRAIS_LIVRAISON),2, ',', ' ') + " € ");
+            $("#montantFraisLivraison").html($.number(CalculerFraisDeLivraison(),2, ',', ' ') + " € ");
 
         }else{
 
@@ -1193,9 +1210,9 @@ function RemovePanier(idProduit,modification){
                         '<i class="fa-solid fa-circle-exclamation fa-2xl" style="color:red;"></i>'+
                         '</div>';
 
-
+    
     $.ajax({
-        url:'index.php?controller=Panier&action=RemovePanier',
+        url:SERVER_URL+'/panier/supprimer/',
         type:'post',
         data:{idProduit:idProduit},
         success:function(response){
@@ -1204,7 +1221,7 @@ function RemovePanier(idProduit,modification){
                 
                 // Met à jour l'affichage du panier       
                 $.ajax({
-                    url:'index.php?controller=Panier&action=AffichagePanier',
+                    url:SERVER_URL+'/panier/affichage/',
                     type:'get',
                     dataType: 'json',
                     success:function(data){
@@ -1244,6 +1261,177 @@ function RemovePanier(idProduit,modification){
 }
 
 
+function AdresseInfo(){
+    
+    $("#paysSelect").on("change", function (event) {
+
+        if($(this).find(":selected").data('frais') == 0){
+            $("#paysHelp").html("Aucun frais supplémentaires.");
+        }else{
+            $("#paysHelp").html("Frais supplémentaires : " + $(this).find(":selected").data('frais') + " € TTC.");
+        }
+
+        $("#prixTotalPanier").html($.number(($("#prixTotalPanier").data('total') + $(this).find(":selected").data('frais')) ,2, ',', ' ') + " € ");
+        $("#prixTotalPanierHT").html($.number(($("#prixTotalPanierHT").data('totalht') + $(this).find(":selected").data('frais')),2, ',', ' ') + " € HT ");
+        
+    });
+
+
+
+    $("#BtnValiderAdresse").on("click", function (event) {
+        event.preventDefault();
+
+        let nomValide = true;
+        let prenomValide = true;
+        let adresseValide = true;
+        let cpValide = true;
+        let villeValide = true;
+
+        if(isEmptyOrSpaces(document.forms["form-adresse"].elements["nom"].value)){
+            nomValide = false;
+            $("#nomHelp").html("Vous devez remplir ce champ.");
+        }else{
+            $("#nomHelp").html("");
+        }
+
+        if(isEmptyOrSpaces(document.forms["form-adresse"].elements["prenom"].value)){
+            prenomValide = false;
+            $("#prenomHelp").html("Vous devez remplir ce champ.");
+        }else{
+            $("#prenomHelp").html("");
+        }
+
+        if(isEmptyOrSpaces(document.forms["form-adresse"].elements["adresse"].value)){
+            adresseValide = false;
+            $("#adresseHelp").html("Vous devez remplir ce champ.");
+        }else{
+            $("#adresseHelp").html("");
+        }
+
+        if(isEmptyOrSpaces(document.forms["form-adresse"].elements["ville"].value)){
+            villeValide = false;
+            $("#villeHelp").html("Vous devez remplir ce champ.");
+        }else{
+            $("#villeHelp").html("");
+        }
+
+
+        var cp = document.forms["form-adresse"].elements["CP"].value;
+
+        if(isEmptyOrSpaces(document.forms["form-adresse"].elements["CP"].value)){
+            cpValide = false;
+            $("#cpHelp").html("Vous devez remplir ce champ.");
+        }else{
+
+            if(!/^\d+$/.test(cp)){
+
+                cpValide = false;
+                $("#cpHelp").html("Code postal non valide.");
+
+            }else{
+
+                $("#cpHelp").html("");
+            }
+            
+        }
+
+        if(nomValide && prenomValide && adresseValide && cpValide && villeValide){
+
+            
+            document.getElementById("form-adresse").submit();
+
+        }
+
+
+        
+    });
+
+
+
+}
+
+
+function PaiementInfo(){
+
+    //Oblige l'ouverture d'un seul accordeon:
+    
+    //Pour chaque accordeon
+    $('#accordion-id .collapse').each((i, e) => 
+    $(e).on('hidden.bs.collapse', () => {
+        // Test si un accordeon est ouvert
+        let isExpanded = false;
+
+        $('#accordion-id [aria-expanded]').each((i, element) => {
+            if ($(element).attr("aria-expanded") === 'true') {
+            
+                isExpanded = true;
+                
+            }
+        });
+    
+        // Si aucun n'est ouvert, ouvre le premier accordeon
+        if (!isExpanded) {
+            
+            $("#paypalRadio").click();
+            
+        }
+    })
+  );
+
+
+  $("#numCarte").on('input', function() {
+        
+        this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');
+        
+
+        var newvalue = "";
+        for (var i = 0; i < this.value.length; i++) {
+            if ((i > 0) && (i % 4 == 0)) {
+                newvalue += ' ';
+            }
+            newvalue += this.value.charAt(i);
+           
+        }
+        this.value = newvalue;
+  });
+
+  $("#cvc").on('input', function() {
+        
+    this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');
+    
+    if(this.value.length >= 3){
+        this.value = this.value.substr(0,3);
+    }
+    
+});
+
+$("#dateCarte").on('input', function() {
+        
+    this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');
+    
+
+    var newvalue = "";
+    for (var i = 0; i < this.value.length; i++) {
+        if ((i > 0) && (i % 2 == 0)) {
+            newvalue += '/';
+        }
+        newvalue += this.value.charAt(i);
+       
+    }
+    this.value = newvalue;
+
+    if(this.value.length >= 5){
+        this.value = this.value.substr(0,5);
+    }
+});
+
+
+
+}
+
+
+
+
 
 function init(){
     validationConnexion();
@@ -1255,6 +1443,8 @@ function init(){
     DeleteButtonCommentaire();
     GetRemovePanierInfo();
     GetAddPanierInfo();
+    AdresseInfo();
+    PaiementInfo();
 
 }
 

@@ -84,7 +84,10 @@ class produit{
      */
     public function GetNoteMoyenne(){
 
-        return number_format((float)$this->noteMoyenne, 1, '.', '');
+        if(isset($this->noteMoyenne)){
+            return number_format((float)$this->noteMoyenne, 1, '.', '');
+        }
+        
 
     }
 

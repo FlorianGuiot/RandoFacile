@@ -22,17 +22,17 @@
         </div>
 
         <div class="col-sm-12 d-flex justify-content-center m-2">
-            <form action="index">
+            <form action=<?php echo SERVER_URL."/"?>>
                 <button class="btn btn-primary" >Retour à l'accueil</button>
             </form>
         </div>
 
         <div class="col-sm-12 d-flex justify-content-center">
-            <img src="./img/john-travolta-lost.gif">
+            <img src=<?php echo SERVER_URL."/img/john-travolta-lost.gif"?>>
         </div>
 
         <div class="col-sm-12 d-flex justify-content-center">
-            <img src="./img/obiwan_404.jpg">
+            <img src=<?php echo SERVER_URL."/img/obiwan_404.jpg"?>>
         </div>
 
 

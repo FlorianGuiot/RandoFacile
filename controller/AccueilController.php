@@ -18,7 +18,7 @@ class AccueilController{
 
             $recherche = $_GET['searchbar'];
             $recherche = DbManager::nettoyer($recherche);
-            header('Location: index.php?controller=Recherche&action=read&recherche='.$recherche);
+            header('Location: '.SERVER_URL.'/recherche/'.$recherche."/");
             
         }
 

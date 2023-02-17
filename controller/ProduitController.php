@@ -77,16 +77,16 @@ class ProduitController{
      */
     public static function GetLienPrecedent($params,$produit){
 
-        $lien = "<div class='lienRetourProduit'><a href='./index'>Accueil</a> > ";
+        $lien = "<div class='lienRetourProduit'><a href='".SERVER_URL."/'>Accueil</a> > ";
 
         if(isset($params["recherche"])){
 
-            $lien .= "<a href='index.php?controller=Recherche&action=read&recherche=".$params["recherche"]."'>".$params["recherche"]."</a> > <p class='pageActuelle'>".$produit->GetLibelle()."</p></div>";
+            $lien .= "<a href='".SERVER_URL."/recherche/".$params["recherche"]."/'>".$params["recherche"]."</a> > <p class='pageActuelle'>".$produit->GetLibelle()."</p></div>";
 
         }else if(isset($params["idCateg"])){
 
             $categorie = ProduitsManager::getCategorieParId($params["idCateg"]);
-            $lien .= "<a href='index.php?controller=Recherche&action=read&idCateg=".$params["idCateg"]."'>".$categorie->GetLibelle()."</a> > <p class='pageActuelle'>".$produit->GetLibelle()."</p></div>";
+            $lien .= "<a href='".SERVER_URL."/recherche/categorie/".$params["idCateg"]."/'>".$categorie->GetLibelle()."</a> > <p class='pageActuelle'>".$produit->GetLibelle()."</p></div>";
 
         }else{
 
@@ -183,16 +183,24 @@ class ProduitController{
                 //Verifie la taille du commentaire
                 if(strlen($_POST["commentaire"]) <= 1024){
 
-                    $ipUser = $_SERVER['REMOTE_ADDR']; //Adresse IP de l'utilisateur
+                    if(isset($_POST["note"]) && $_POST["note"] > 0){
 
-                    date_default_timezone_set('Europe/Paris');
-                    $dateDuJour = date('Y-m-d H:i:s', time()); //Date du commentaire
+                        $ipUser = $_SERVER['REMOTE_ADDR']; //Adresse IP de l'utilisateur
 
-                    //Post le commentaire en BDD
-                    $estAdd = ProduitsManager::AddCommentaire($user,$ipUser,DbManager::nettoyer($_POST["commentaire"]),$dateDuJour,DbManager::nettoyer($_POST["idProduit"]),$_POST['note']);
-                    
-                    if(!$estAdd){
-                        $erreur = "Un problème est survenu lors de l'ajout du commentaire.";
+                        date_default_timezone_set('Europe/Paris');
+                        $dateDuJour = date('Y-m-d H:i:s', time()); //Date du commentaire
+
+                        //Post le commentaire en BDD
+                        $estAdd = ProduitsManager::AddCommentaire($user,$ipUser,DbManager::nettoyer($_POST["commentaire"]),$dateDuJour,DbManager::nettoyer($_POST["idProduit"]),DbManager::nettoyer($_POST["note"]));
+                        
+                        if(!$estAdd){
+
+                            $erreur = "Un problème est survenu lors de l'ajout du commentaire.";
+                            
+                        }
+
+                    }else{
+                        $erreur = "Vous devez laisser une note.";
                     }
                 //Message trop long
                 }else{

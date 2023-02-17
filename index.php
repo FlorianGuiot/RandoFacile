@@ -2,6 +2,8 @@
 
 // Enregistrement de la racine du site
 define('ROOT', __DIR__);
+define('SERVER_URL', "/Randofacile");
+// define('SERVER_URL', $_SERVER["SERVER_NAME"]);
 define('DEFAULT_CONTROLLER', "Accueil");
 define('DEFAULT_ACTION', "read");
 

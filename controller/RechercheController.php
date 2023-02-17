@@ -28,17 +28,19 @@ class RechercheController{
         //Recupère les articles
         if(isset($params['recherche'])){
 
-            $lienPage = "index.php?controller=Recherche&action=read&recherche=".$params['recherche'];
+            $lienPage = SERVER_URL."/recherche/".$params['recherche'];
             $lesProduits = ProduitsManager::getLesProduits($params['recherche'],-1,LIMIT_PRODUITS,$lastProduit);
             $nbrResultatsRecherche = ProduitsManager::getNbrProduitsRecherche($params['recherche'],-1);
 
         }else{
 
-            $lienPage = "index.php?controller=Recherche&action=read&idCateg=".$params['idCateg'];
+            $lienPage = SERVER_URL."/recherche/categorie/".$params['idCateg'];
             $lesProduits = ProduitsManager::getLesProduits(null,$params['idCateg'],LIMIT_PRODUITS,$lastProduit);
             $nbrResultatsRecherche = ProduitsManager::getNbrProduitsRecherche(null,$params['idCateg']);
 
         }
+
+        
 
         /*
         ====================

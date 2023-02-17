@@ -26,30 +26,32 @@ if(count($lesProduits) < 1){
         $nbrNotes = ProduitsManager::getNbrNotes($unProduit);
 
         // Lien du produit
-        $lienProduit = "./index?controller=Produit&action=read&idProduit=".$unProduit->GetId(); 
+        $lienProduit = SERVER_URL; 
 
         if(!isset($params['recherche'])){
 
-            $lienProduit = $lienProduit."&idCateg=".$unProduit->GetCategorie()->GetId();
+            $lienProduit = $lienProduit."/categorie/".$unProduit->GetCategorie()->GetId();
 
         }
         else{
 
-            $lienProduit = $lienProduit."&recherche=".$params['recherche'];
+            $lienProduit = $lienProduit."/recherche/".$params['recherche'];
             
         }
+
+        $lienProduit .= "/article/".$unProduit->GetId()."/";
 ?>
 
         <div class="col-xxl-3 col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs-12 pb-2">
             <div class="card text-center mx-auto shadow-lg bg-white rounded">
                 <a href="<?php echo $lienProduit ?>"><?php echo "<img class='card-img-top' src= '".$unProduit->GetLiensImage()[0]."'>";?></a>
                 <div class="card-body">
-                    <a href="<?php echo $lienProduit ?>" class="lien-article"><h5 class="card-title">
+                    <a href="<?php echo $lienProduit ?>" class="lien-article"><h5 class="card-title text-truncate">
                         <?php
                             echo $unProduit->GetLibelle();
                         ?>
                     </h5></a>
-                    <p class="card-text">
+                    <p class="card-text fs-7 text-truncate">
                         <?php
                             echo $unProduit->GetResume();
                         ?>
@@ -121,7 +123,7 @@ if(count($lesProduits) < 1){
                             ?>
 
                             <li class="page-item">
-                            <a class="page-link" href="<?php echo $lienPage.'&numPage='.($params['numPage']-1)?>" aria-label="Previous">
+                            <a class="page-link" href="<?php echo $lienPage.'/p/'.($params['numPage']-1)."/"?>" aria-label="Previous">
                                 <span aria-hidden="true">&laquo;</span>
                             </a>
                             </li>
@@ -134,7 +136,7 @@ if(count($lesProduits) < 1){
 
                                 ?>
                                 <li class="page-item">
-                                    <a class="page-link" href="<?php echo $lienPage.'&numPage=1'?>">1</a>
+                                    <a class="page-link" href="<?php echo $lienPage.'/p/1/'?>">1</a>
                                 </li>
                                 <li class="page-item">
                                     <span class="page-link">...</span>
@@ -148,14 +150,14 @@ if(count($lesProduits) < 1){
                                 if($i != $params['numPage']){
                                     ?>
                                     <li class="page-item">
-                                        <a class="page-link" href="<?php echo $lienPage.'&numPage='.($i)?>"><?php echo ($i) ?></a>
+                                        <a class="page-link" href="<?php echo $lienPage.'/p/'.($i)."/"?>"><?php echo ($i) ?></a>
                                     </li>
                                 
                                 <?php
                                 }
                                 else{
                                     ?>
-                                        <li class="page-item active"><a class="page-link" href="<?php echo $lienPage.'&numPage='.$i ?>"><?php echo $i ?></a></li>
+                                        <li class="page-item active"><a class="page-link" href="<?php echo $lienPage.'/p/'.$i.'/' ?>"><?php echo $i ?></a></li>
                                     <?php
                                 }
 
@@ -169,7 +171,7 @@ if(count($lesProduits) < 1){
                                     <span class="page-link">...</span>
                                 </li>
                                 <li class="page-item">
-                                    <a class="page-link" href="<?php echo $lienPage.'&numPage='.$nombreDePage?>"><?php echo ($nombreDePage) ?></a>
+                                    <a class="page-link" href="<?php echo $lienPage.'/p/'.$nombreDePage.'/'?>"><?php echo ($nombreDePage) ?></a>
                                 </li>
                             
                                 <?php
@@ -179,7 +181,7 @@ if(count($lesProduits) < 1){
                                 ?>
 
                                 <li class="page-item">
-                                <a class="page-link" href="<?php echo $lienPage.'&numPage='.($params['numPage']+1)?>" aria-label="Next">
+                                <a class="page-link" href="<?php echo $lienPage.'/p/'.($params['numPage']+1).'/'?>" aria-label="Next">
                                 <span aria-hidden="true">&raquo;</span>
                                 </a>
                                 </li>

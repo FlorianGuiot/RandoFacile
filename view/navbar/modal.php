@@ -199,7 +199,7 @@
 
 
 <!--Notification succès-->
-<div id="notification_success" class="toast align-items-center" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="10000">
+<div id="notification_success" class="toast position-absolute bottom-0 end-0 align-items-center" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="10000">
   <div class="d-flex">
     <div id="notifitication_s_body" class="toast-body">
     Hello, world! This is a toast message.

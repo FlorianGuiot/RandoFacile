@@ -230,13 +230,13 @@ class panier{
     public function GetAffichagePanier(){
 
 
-        $html = '<div class="d-flex justify-content-center m-2"><a href="index.php?controller=Panier&action=read" class="btn btn-primary">Mon panier</a></div>'. 
+        $html = '<div class="d-flex justify-content-center m-2"><a href="'.SERVER_URL.'/panier/" class="btn btn-primary">Mon panier</a></div>'. 
                 '<div class="d-flex justify-content-center"><p>Total : '.NombreFormatter::GetNombreFormatFr($this->GetPrixTotal()).' €  TTC</p></div> <div class="panier-container">';
 
         foreach($this->panier as $unP){
             
 
-            $html .= '<div id="'.$unP['produit']->GetId().'" class="dropdown-item lignePanier"><a class="lien " href="'.$unP['produit']->GetLienProduit().'"><img height="40" src="'.$unP['produit']->GetLiensImage()[0].'"> '.$unP['produit']->GetLibelle().'</a>'.
+            $html .= '<div id="'.$unP['produit']->GetId().'" class="dropdown-item lignePanier"><a class="lien " href="'.$unP['produit']->GetLienProduit().'"><img height="40" src="'.$unP['produit']->GetLiensImage()[0].'"> <p class="overflow-hidden" style="min-width:250px;max-width:250px;">'.$unP['produit']->GetLibelle().'</p></a>'.
             '<div class="row mt-1">'.
             '<div class="col-6">'.
             '<input  id="qteProduitLignePanier" type="number"  class="form-control qteProduitLignePanier" value="'.$unP['qte'].'" max="'.$unP['produit']->GetQteEnStock().'" min="1">'.
