@@ -19,64 +19,44 @@ if(!isset($params['valider']) || $params['valider'] != true ){
 
 ?>
 
-<div class="container-xl">
-    <!--Retour-->
-
-    <!--Boutons-->
-    <form action=<?php echo SERVER_URL."/commande/adresse/"?> method="POST">
-    <!--CGV-->
-    <input type="hidden" name="checkbox_CGV" value="true" />
-
-    <div class="mt-2">
-                    <button id="BtnRetourAdresse" type="submit" class="btn btn-primary"><i class="fa-solid fa-backward"></i> Retour</button>
-                </div>
-
-    </form>
-</div>
+<div class="container-xl h-100">
 
 
 
 
 
-
-<!-- formulaire -->
-<form id="form-paiement" action=<?php echo SERVER_URL."/commande/paiement/valider/"?> method="POST">
-
-
-    <!--Nom-->
-    <input type="hidden" name="nom" value=<?php echo $_POST['nom']; ?> />
-    <!--Prénom-->
-    <input type="hidden" name="prenom" value=<?php echo $_POST['prenom']; ?> />
-    <!--Adresse-->
-    <input type="hidden" name="adresse" value=<?php echo $_POST['adresse']; ?> />
-    <!--Ville-->
-    <input type="hidden" name="ville" value=<?php echo $_POST['ville']; ?> />
-    <!--CP-->
-    <input type="hidden" name="CP" value=<?php echo $_POST['CP']; ?> />
-    <!--Pays-->
-    <input type="hidden" name="paysSelect" value=<?php echo $_POST['paysSelect']; ?> />
-    <!--CGV-->
-    <input type="hidden" name="checkbox_CGV" value="true" />
 
     <div class="container-xl shadow p-3 mb-5 bg-body rounded mt-2">
 
         <div class="row">
-            <div id="panier-page-container" class="col-xl-8 col-md-12"><!--Paiement-->
+            <div id="panier-page-container" class="col-xl-12 col-md-12"><!--Paiement-->
                 
 
-            <p><?php if(isset($params['erreur_valider'])){echo $params['erreur_valider'];} ?></p>
+                <div class="col-sm-12">
+                    <div class="d-flex justify-content-center">
+                        <p class="text-center fs-1 text">Merci de votre achat !</p>
+                    </div>
+                </div>
 
-            </div> <!--Fin Paiement-->
+                <div class="col-sm-12">
+                    <p class="text-center fs-5 text">Vous allez bientôt recevoir un email contenant le detail de votre commande à l'adresse <strong><?php echo $params['user_email']; ?></strong>.</p>
+                </div>
+
+                <div class="col-sm-12 d-flex justify-content-center">
+                    <form action=<?php echo SERVER_URL."/"?>>
+                        <button class="btn btn-primary" >Suivre ma commande</button>
+                    </form>
+                </div>
+
+                <a href=<?php echo SERVER_URL."/"?> class="lien d-flex justify-content-center">Retour à l'accueil</a>
+
             
-            <!-- Info prix -->
-            <div id="panier-accepter" class="col-xl-4 col-md-12 d-flex align-items-center justify-content-center">
-                
-            </div> <!-- Fin info prix -->
-
-        
+            </div>
         </div>
+
     </div>
-</form> <!-- Fin formulaire -->
+
+</div>
 <?php
 
     require_once("./view/footer/footer.php"); // Footer

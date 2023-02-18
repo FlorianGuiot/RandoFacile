@@ -42,7 +42,6 @@ if(!isset($params['valider']) || $params['valider'] != true ){
 <!-- formulaire -->
 <form id="form-paiement" action=<?php echo SERVER_URL."/commande/paiement/valider/"?> method="POST">
 
-    <?php if(isset($params['erreur_valider'])){echo $params['erreur_valider'];} ?>
 
     <!--Nom-->
     <input type="hidden" name="nom" value=<?php echo $_POST['nom']; ?> />
@@ -146,8 +145,9 @@ if(!isset($params['valider']) || $params['valider'] != true ){
                     <p class="text-center fs-3 text ">Total :</p>
                     <p class="text-center "><span id="prixTotalPanier" data-total="<?php  echo  $lePanier->GetPrixTotal() + $frais_pays; ?>" class="fs-3 prix text"><?php  echo  NombreFormatter::GetNombreFormatFr($lePanier->GetPrixTotal() + $frais_pays) ?> € </span><span class="small fs-6">TTC</span></p>
                     <p class="text-center "><span id="prixTotalPanierHT" data-totalht="<?php  echo  $lePanier->GetPrixTotalHT() + $frais_pays ?>" class="prix-ht"><?php  echo  NombreFormatter::GetNombreFormatFr($lePanier->GetPrixTotalHT() + $frais_pays) ?> € HT</span></p>
-                    
                     <p class="">TVA : <span id="montantTVA" class="prix-ht"><?php  echo  NombreFormatter::GetNombreFormatFr($lePanier->GetMontantTVA()) ?> €</span> <span id="montantTVA" class="prix-ht"> ( 20% )</span></p>
+                    
+                    <p class="validerHelp text-danger shake"><?php if (isset($params["erreur_valider"])){ echo $params["erreur_valider"]; } ?></p>
                     <div class="text-center m-2">
                         
                         <button id="BtnValiderPaiement" type="submit" class="btn btn-primary">Valider et payer <i class="fa-regular fa-credit-card"></i></button>

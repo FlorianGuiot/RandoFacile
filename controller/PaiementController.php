@@ -86,11 +86,11 @@ class PaiementController{
     /**
      * Valide l'adresse de l'utilisateur
      */
-    public static function readPaiement(){
+    public static function readPaiement($params){
         
         $erreur = self::TestValiderAdresse();
         
-        
+
         if($erreur == ""){
             //Affichage de la page paiemant 
 
@@ -134,11 +134,21 @@ class PaiementController{
 
 
      /**
-     * Test si l'utilisateur peut valider son adresse
+     * Test si l'adresse de l'utilisateur est correcte. Test si l'utilisateur est connecté et si son panier n'est pas vide.
      */
     public static function TestValiderAdresse(){
         
         $erreur = self::TestValiderPanier(); // Test que l'utilisateur est bien connecté, panier non vide et qu'il a accepté CGV.
+
+        //Les pays disponibles
+        $lesPays = PaysManager::GetLesPays();
+        $lesPaysId = array();
+
+        foreach($lesPays as $unP){
+
+            array_push($lesPaysId, $unP->GetId());
+
+        }
 
         if(!isset($_POST['prenom']) || empty(trim($_POST['prenom'])) || preg_match("/[0-9]/",$_POST['prenom'])){
 
@@ -160,7 +170,11 @@ class PaiementController{
 
             $erreur = "Vous devez saisir un pays valide.";
             
-        }
+        }else if(!in_array($_POST['paysSelect'],$lesPaysId)){//Test si le pays sélectionné est bien dans la liste
+
+            $erreur = "Vous devez saisir un pays valide.";
+
+        } 
         
         return $erreur;
 
@@ -169,59 +183,99 @@ class PaiementController{
 
 
     /**
-     * test si le paiement est valide ou non.
+     * test si les informations de paiement sont acceptable ou non.
      * Si oui retourne vers la page de succès et ajoute la commande en BDD
      * Sinon retourne sur la page précédente avec une erreur
      */
     public static function testPaiement(){
         
+        //Test que l'utilisateur a le droit d'etre sur cette page
         $erreur = self::TestValiderAdresse();
-        $paiementValide = true;
+
+        //Paiement non valide par défaut
+        $paiementValide = false;
+
+
+        $lePanier = PanierController::GetPanier();
+        $lesPays = PaysManager::GetLesPays();
+
+        //Trouve les frais de port du pays sélectionné précédemment
+        $i = 0;
+        $frais_pays = null;
+        while($i < count($lesPays) && $frais_pays == null){
+
+            if($_POST['paysSelect'] == $lesPays[$i]->GetId()){
+                
+                $frais_pays = $lesPays[$i]->GetFrais();
+                
+            }
+            
+            $i++;
+        }
+
+        $montantPaiement = $lePanier->GetPrixTotal() + $frais_pays;
+
+
+
+
+
+
+        if($_POST['cbRadio'] == "CB"){//CB : Test des informations par carte
+
+            if(empty($_POST['cvc'])){
+
+                $erreur = "Informations de paiement incomplètes.";
+
+            }else if(empty($_POST['numCarte'])){
+
+                $erreur = "Informations de paiement incomplètes.";
+
+
+            }else if(empty($_POST['dateCarte'])){
+
+                $erreur = "Informations de paiement incomplètes.";
+
+
+            }else{//Si aucune erreur demande de paiement a la banque
+
+                //Appel fictif a l'API de la banque
+                $paiementValide = true;
+
+                if(!$paiementValide){
+
+                    $erreur = "Echec de paiement.";
+                }
+            }
+
+
+
+        }else{//Paypal : Simplement besoin de se connecter a Paypal
+
+           //Appel fictif a l'API de paypal
+           $paiementValide = true;
+
+           if(!$paiementValide){
+
+               $erreur = "Echec de paiement.";
+           }
+
+        }
+
         
-        if($erreur == ""){
+        
+        //Si pas d'erreur : Affiche la page de succès et ajoute la commande
+        if($paiementValide){
+
+            //Ajoute la commande
+            
+
+            //Vide le panier
+            PanierManager::ClearPanier($_SESSION['iduser']);
 
             //Information pour la page de succès
             $params['page_name'] = "Succès";
             $params['valider'] = true;
-
-            
-            date_default_timezone_set('Europe/Paris');
-            $dateDuJour = date('Y-m-d H:i:s', time()); //Date du jour
-
-            if($_POST['cbRadio'] == "CB"){
-                
-                if(empty($_POST['cvc'])){
-
-                    $erreur = "Echec de paiement ";
-
-                }else if(empty($_POST['numCarte'])){
-
-                    $erreur = "Echec de paiement ";
-
-
-                }// }else if($_POST['dateCarte'] < $dateDuJour){
-
-                //     $erreur = "Echec de paiement ";
-
-                // }
-                
-            
-
-            }
-
-            if($erreur != ""){
-
-                $paiementValide = true;
-
-            }
-
-        }else{
-
-            $paiementValide = false;
-
-        }
-        
-        if($paiementValide == true){
+            $params['user_email'] = UserManager::getUserById($_SESSION['iduser'])->GetEmail();
             /*
             ====================
             Affichage de la page
@@ -229,7 +283,7 @@ class PaiementController{
             */
             require_once("./view/commande/success.php"); // Page succès
 
-        }else{
+        }else{ //Sinon retour a la page de paiement avec le message d'erreur
 
             
             $params['erreur_valider'] = $erreur;

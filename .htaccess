@@ -16,6 +16,7 @@ RewriteRule ^cgv/$ index.php?controller=Info&action=readCGV [nc]
 
 RewriteRule ^connexion/$ index.php?controller=Login&action=connexion [nc]
 RewriteRule ^deconnexion/$  index.php?controller=Login&action=disconnect [nc]
+RewriteRule ^membre/$  index.php?controller=EspaceMembre&action=read [nc]
 
 RewriteRule ^panier/ajouter/$ index.php?controller=Panier&action=AddPanier [nc]
 RewriteRule ^panier/supprimer/$ index.php?controller=Panier&action=RemovePanier [nc]
