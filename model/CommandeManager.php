@@ -147,17 +147,80 @@ class CommandeManager {
 
 
 
+    /**
+     * GetStatutParId
+     * retourne le statut d'un id
+     *
+     * @return statut
+     */
+    public static function GetStatutParId($id){
+
+        // Connexion bdd
+        DbManager::getConnexion();
+        // Affichage d'erreur en cas de non connexion à la base de données.
+        if(DbManager::getConnexion() == null ){
+
+            echo 'Erreur de connexion à la bdd.';
+
+        }
+
+        // Récupération du statut.
+        $sql='SELECT id,libelle FROM statut_commande WHERE id = :id';
+        $resultStatut=DbManager::$cnx->prepare($sql);
+        $resultStatut->bindParam(':id', $id, PDO::PARAM_INT);
+        $resultStatut->execute();
+        $result_statut=$resultStatut->fetch();
+
+        return new statut($result_statut['id'],$result_statut['libelle']);
+    }
+
+
+
+
+
+
+     /**
+     * GetStatutParLibelle
+     * retourne le statut d'un libelle
+     *
+     * @return statut
+     */
+    public static function GetStatutParLibelle($libelle){
+
+        // Connexion bdd
+        DbManager::getConnexion();
+        // Affichage d'erreur en cas de non connexion à la base de données.
+        if(DbManager::getConnexion() == null ){
+
+            echo 'Erreur de connexion à la bdd.';
+
+        }
+
+        // Récupération du statut.
+        $sql='SELECT id,libelle FROM statut_commande WHERE libelle = :libelle';
+        $resultStatut=DbManager::$cnx->prepare($sql);
+        $resultStatut->bindParam(':libelle', $libelle, PDO::PARAM_INT);
+        $resultStatut->execute();
+        $result_statut=$resultStatut->fetch();
+
+        return new statut($result_statut['id'],$result_statut['libelle']);
+    }
+
+
+
+
+
 
 
 
 
     /**
-     * AddPanier
-     * Ajoute un produit dans le panier de l'utilisateur
-     * retourne true si le produit est ajouté
+     * AddCommande
+     * Ajoute une commande dans la base de donnée
+     * retourne true si la commande est ajoutée
      * @return bool
      */
-    public static function AddPanier($produit,$qte,$idUser,$date){
+    public static function AddCommande($adresse,$ville,$cp,$idPays,$prenom,$nom,$idUser,$lePanier){
 
         // Connexion bdd
         DbManager::getConnexion();
@@ -170,55 +233,98 @@ class CommandeManager {
 
         $add = true;
         
-        $idProduit = $produit->GetId();
 
 
-        //Insert ou update du produit dans la table panier
+        
         try{
 
-            $sql='SELECT idProduit,idUser from panier WHERE idProduit = :idProduit AND idUser = :idUser';
-            $insertUser = DbManager::$cnx->prepare($sql);
-            $insertUser->bindParam(':idProduit', $idProduit);
-            $insertUser->bindParam(':idUser', $idUser);
+
+            // =============================================
+            //
+            // Etape 1
+            // Ajout de la commande.
+            //
+            // ==============================================
+
+            $sql='INSERT INTO commandes (adresse, ville, cp, idPays, prenom, nom, idUser) VALUES (:adresse, :ville, :cp, :idPays, :prenom, :nom, :idUser)';
+
+            $insertCommande = DbManager::$cnx->prepare($sql);
+            $insertCommande->bindParam(':adresse', $adresse);
+            $insertCommande->bindParam(':ville', $ville);
+            $insertCommande->bindParam(':cp', $cp);
+            $insertCommande->bindParam(':idPays', $idPays);
+            $insertCommande->bindParam(':prenom', $prenom);
+            $insertCommande->bindParam(':nom', $nom);
+            $insertCommande->bindParam(':idUser', $idUser);
 
             // Exécution ! 
-            $insertUser->execute();
-            $insertUser->setFetchMode(PDO::FETCH_ASSOC);
+            $insertCommande->execute();
 
-            if($insertUser->rowCount() == 1){
+            //IdCommande
+            $idCommande= DbManager::$cnx->lastInsertId();
 
-                $sql='UPDATE panier SET qte = :qte WHERE idProduit = :idProduit AND idUser = :idUser';
+            // =============================================
+            //
+            // Etape 2
+            // Ajout du statut de la commande.
+            //
+            // ==============================================
 
-                $insertUser = DbManager::$cnx->prepare($sql);
-                $insertUser->bindParam(':idProduit', $idProduit);
-                $insertUser->bindParam(':idUser', $idUser);
-                $insertUser->bindParam(':qte', $qte);
+            $idStatutPreparation = self::GetStatutParLibelle("En cours de préparation")->GetId();
 
-                // Exécution ! 
-                $insertUser->execute();
+            date_default_timezone_set('Europe/Paris');
+            $dateDuJour = date('Y-m-d H:i:s', time()); //Date de la commande
 
-            
 
-            }else{
+            $sql='INSERT INTO statuts_commandes (idStatut, idCommande, date) VALUES (:idStatut, :idCommande, :date)';
+            $insertStatut = DbManager::$cnx->prepare($sql);
+            $insertStatut->bindParam(':idStatut', $idStatutPreparation);
+            $insertStatut->bindParam(':idCommande', $idCommande);
+            $insertStatut->bindParam(':date', $dateDuJour );
 
-                $sql='INSERT INTO panier (idProduit, idUser, qte, DateAjout) VALUES (:idProduit, :idUser, :qte, :DateAjout)';
+            // Exécution ! 
+            $insertStatut->execute();
 
-                $insertUser = DbManager::$cnx->prepare($sql);
-                $insertUser->bindParam(':idProduit', $idProduit);
-                $insertUser->bindParam(':idUser', $idUser);
-                $insertUser->bindParam(':qte', $qte);
-                $insertUser->bindParam(':DateAjout', $date);
 
-                // Exécution ! 
-                $insertUser->execute();
 
-            } 
+
+            // =============================================
+            //
+            // Etape 3
+            // Ajout du details commande.
+            //
+            // ==============================================
+
+            $sql = "INSERT INTO details_commande (idCommande, idProduit, qte) VALUES ";
+            $bindSql = array();
+
+            foreach($lePanier as $unP){
+
+                if($sql[strlen($sql)-1] == ')'){
+
+                    $sql .= ",";
+
+                }
+
+                array_push($bindSql, $idCommande);
+                array_push($bindSql, $unP['produit']->GetId());
+                array_push($bindSql, $unP['qte']);
+
+                $sql .= "(?,?,?)";
+
+            }
+
+            $insertDetails = DbManager::$cnx->prepare($sql);
+
+            // Exécution ! 
+            $insertDetails->execute($bindSql);
+
 
 
         }catch(PDOException $e){
 
             $add = false;
-
+            echo "Syntax Error: ".$e->getMessage();
         }
 
 

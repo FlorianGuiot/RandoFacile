@@ -266,22 +266,33 @@ class PaiementController{
         //Si pas d'erreur : Affiche la page de succès et ajoute la commande
         if($paiementValide){
 
+
             //Ajoute la commande
+            $add = CommandeManager::AddCommande(DbManager::nettoyer($_POST['adresse']),DbManager::nettoyer($_POST['ville']),DbManager::nettoyer($_POST['CP']),DbManager::nettoyer($_POST['paysSelect']),DbManager::nettoyer($_POST['prenom']),DbManager::nettoyer($_POST['nom']),$_SESSION['iduser'],$lePanier->GetPanier());
+
+            if($add){
+
+                //Vide le panier
+                PanierManager::ClearPanier($_SESSION['iduser']);
+
+                //Information pour la page de succès
+                $params['page_name'] = "Succès";
+                $params['valider'] = true;
+                $params['user_email'] = UserManager::getUserById($_SESSION['iduser'])->GetEmail();
+                /*
+                ====================
+                Affichage de la page
+                ====================
+                */
+                require_once("./view/commande/success.php"); // Page succès
+
+            }else{
+
+                $params['erreur_valider'] = "Erreur lors du passage de la commande. Veuillez ressayer plus tard.";
+                self::readPaiement($params);
+
+            }
             
-
-            //Vide le panier
-            PanierManager::ClearPanier($_SESSION['iduser']);
-
-            //Information pour la page de succès
-            $params['page_name'] = "Succès";
-            $params['valider'] = true;
-            $params['user_email'] = UserManager::getUserById($_SESSION['iduser'])->GetEmail();
-            /*
-            ====================
-            Affichage de la page
-            ====================
-            */
-            require_once("./view/commande/success.php"); // Page succès
 
         }else{ //Sinon retour a la page de paiement avec le message d'erreur
 

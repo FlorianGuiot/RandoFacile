@@ -43,7 +43,7 @@ if(!isset($params['valider']) || $params['valider'] != true ){
                 </div>
 
                 <div class="col-sm-12 d-flex justify-content-center">
-                    <form action=<?php echo SERVER_URL."/"?>>
+                    <form action=<?php echo SERVER_URL."/membre/"?>>
                         <button class="btn btn-primary" >Suivre ma commande</button>
                     </form>
                 </div>

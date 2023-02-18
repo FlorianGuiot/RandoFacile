@@ -44,15 +44,15 @@ if(!isset($params['valider']) || $params['valider'] != true ){
 
 
     <!--Nom-->
-    <input type="hidden" name="nom" value=<?php echo $_POST['nom']; ?> />
+    <input type="hidden" name="nom" value="<?php echo $_POST['nom']; ?>" />
     <!--Prénom-->
-    <input type="hidden" name="prenom" value=<?php echo $_POST['prenom']; ?> />
+    <input type="hidden" name="prenom" value="<?php echo $_POST['prenom']; ?>" />
     <!--Adresse-->
-    <input type="hidden" name="adresse" value=<?php echo $_POST['adresse']; ?> />
+    <input type="hidden" name="adresse" value="<?php echo $_POST['adresse']; ?>" />
     <!--Ville-->
-    <input type="hidden" name="ville" value=<?php echo $_POST['ville']; ?> />
+    <input type="hidden" name="ville" value="<?php echo $_POST['ville']; ?>" />
     <!--CP-->
-    <input type="hidden" name="CP" value=<?php echo $_POST['CP']; ?> />
+    <input type="hidden" name="CP" value="<?php echo $_POST['CP']; ?>"/>
     <!--Pays-->
     <input type="hidden" name="paysSelect" value=<?php echo $_POST['paysSelect']; ?> />
     <!--CGV-->
