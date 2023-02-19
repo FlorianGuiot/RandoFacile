@@ -231,6 +231,137 @@ class LoginController{
     }
 
 
+    /**
+     * Modifie les informations de l'utilisateur
+     */
+    public static function ModifierProfil($params){
+
+        $userAModifier = UserManager::getUserById($_SESSION['iduser']);
+        $erreur='';
+
+        //Test si le mail est bien un mail
+        if(filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)){
+
+            // Test si le mail existe déja
+            $user = UserManager::getUserByEmail($_POST['email']);
+
+
+            //Si un utilisateur possede l'adresse email retourne erreur 1
+            if($user != null && $user != $userAModifier){
+
+                $erreur = "L'adresse email est déja utilisée.";
+            
+            }
+        
+        //Email non valide
+        }else{
+
+            $erreur = "L'adresse email n'est pas au bon format.";
+
+        }
+
+
+
+        //Si il n'y a pas d'erreur lors de la première étape
+        if($erreur == ""){ 
+
+            if(!isset($_POST['nom']) || strlen(trim($_POST['nom'])) <= 0 || !isset($_POST['prenom']) || strlen(trim($_POST['prenom'])) <= 0){
+
+                $erreur = 'Nom ou prénom non rempli';
+
+            }elseif(!self::testDateNaissance($_POST['dateNaissance'])){
+
+                $erreur = 'Votre date de naissance est invalide';
+
+            }else{
+
+                //Update l'utilisateur
+
+                $add = UserManager::UpdateUserInfo($_POST['nom'],$_POST['prenom'],$_POST['dateNaissance'],strtolower($_POST['email']),$userAModifier->GetId());
+
+                //Si une erreur lors de l'ajout
+                if(!$add){
+
+                    $erreur = 'Un problème est survenu lors de la modification de votre compte. Veuillez réessayer plus tard.';
+                    
+                }
+            }
+
+        }
+        
+        require_once './controller/EspaceMembreController.php';
+
+        if($erreur == ""){
+
+            EspaceMembreController::read();
+
+        }else{
+
+            $params['erreur'] = $erreur;
+            EspaceMembreController::readModifierInformations($params);
+        }
+    
+        
+
+    }
+
+
+
+
+    /**
+     * Modifie les informations de securité de l'utilisateur
+     */
+    public static function ModifierSecurite($params){
+
+        $userAModifier = UserManager::getUserById($_SESSION['iduser']);
+        $erreur='';
+
+
+        if(!preg_match(self::$passwordPatern,$_POST['password'])){
+
+            $erreur = "Le mot de passe n'est pas conforme.";
+        
+        //Si mots de passe non identiques retourne erreur 3
+        }else if($_POST['password'] != $_POST['confpassword']){
+
+            $erreur = "Les mots de passe ne sont pas les memes.";
+
+        }
+
+
+        //Si il n'y a pas d'erreur lors de la première étape
+        if($erreur == ""){ 
+
+            //Update le mot de passe de l'utilisateur
+
+            $add = UserManager::UpdateUserPassword($_POST['password'],$userAModifier->GetId());
+
+            //Si une erreur lors de l'ajout
+            if(!$add){
+
+                $erreur = 'Un problème est survenu lors de la modification de votre compte. Veuillez réessayer plus tard.';
+                
+            }
+
+        }
+        
+        require_once './controller/EspaceMembreController.php';
+
+        if($erreur == ""){
+
+            EspaceMembreController::read();
+
+        }else{
+
+            $params['erreur'] = $erreur;
+            EspaceMembreController::readModifierSecurite($params);
+        }
+    
+        
+
+    }
+
+
 
     /**
      * Ajoute un utilisateur dans la bdd

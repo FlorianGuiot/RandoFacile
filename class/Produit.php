@@ -178,9 +178,8 @@ class produit{
      * @return string
      */
     public function GetLienProduit(){
-
-
-        return "index?controller=Produit&action=read&idProduit=".$this->GetId()."&idCateg=".$this->GetCategorie()->GetId();
+        
+        return SERVER_URL."/categorie/".$this->GetCategorie()->GetId()."/article/".$this->GetId()."/";
     }
 
     /**

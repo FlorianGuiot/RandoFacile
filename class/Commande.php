@@ -36,6 +36,8 @@ class commande{
         $this->user = $user;
         $this->adresse = $adresse;
         $this->ville = $ville;
+        $this->nom = $nom;
+        $this->prenom = $prenom;
         $this->cp = $cp;
         $this->pays = $pays;
         $this->lesStatuts = $lesStatuts;
@@ -92,6 +94,32 @@ class commande{
         }
 
         return $statutPlusRecent;
+
+    }
+
+
+    /**
+     * Retourne la date de la commande.
+     */
+    public function GetDate(){
+
+        $statutPlusAncien = $this->lesStatuts[0];
+
+        foreach($this->lesStatuts as $unStatut){
+
+            $ancienneDate = strtotime($statutPlusAncien['date']);
+            $statutDate = strtotime($unStatut['date']);
+
+            
+            if($statutDate < $ancienneDate){
+
+                $statutPlusAncien = $unStatut;
+            }
+
+            
+        }
+
+        return new DateTime($statutPlusAncien['date']);
 
     }
 

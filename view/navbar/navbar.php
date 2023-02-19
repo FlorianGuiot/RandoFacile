@@ -117,7 +117,7 @@ $recherche = '';
                 ?>
                 <div class="connexion2">
                     <div>
-                        <a href="#connexion" data-toggle="modal">Mon espace</a>
+                        <a href="<?php echo SERVER_URL."/membre/" ?>" >Mon espace</a>
                     </div>
                     <div>
                         <a href="#deconnexion" onclick="disconnect()">Déconnexion</a>

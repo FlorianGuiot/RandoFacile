@@ -320,7 +320,58 @@ function disconnect(){
 
 }
 
+function modificationPassword(){
 
+
+    // Lorsque l'utilisateur modifie le champ mot de passe :
+    document.querySelector("#passwordM").addEventListener("keyup", function(event) {
+        var mdp = document.forms["form-modification"].elements["passwordM"].value;
+        
+        // Valide le nombre de caractères.
+        if(mdp.length >= 8 && mdp.length <= 30){
+            document.getElementById("MmdpHelpMax").innerHTML = '<div class="infoPassword"><div id="triangleVert"></div><p class="valid_password">entre 8 et 30 caractères.</p></div>';
+        }
+        else{
+            document.getElementById("MmdpHelpMax").innerHTML = '<div class="infoPassword"><div id="triangleGris"></div><p>entre 8 et 30 caractères.</p></div>';
+        }
+
+        // Valide la présence d'une majuscule.
+        if(/[A-Z]+/.test(mdp)){
+            document.getElementById("MmdpHelpMaj").innerHTML = '<div class="infoPassword"><div id="triangleVert"></div><p class="valid_password">1 lettre majuscule.</p></div>';
+        }
+        else{
+            document.getElementById("MmdpHelpMaj").innerHTML = '<div class="infoPassword"><div id="triangleGris"></div><p>1 lettre majuscule.</p></div>';
+        }
+
+        // Valide la présence d'une minuscule.
+        if(/[a-z]+/.test(mdp)){
+            document.getElementById("MmdpHelpMin").innerHTML = '<div class="infoPassword"><div id="triangleVert"></div><p class="valid_password">1 lettre minuscule.</p></div>';
+        }
+        else{
+            document.getElementById("MmdpHelpMin").innerHTML = '<div class="infoPassword"><div id="triangleGris"></div><p>1 lettre minuscule.</p></div>';
+        }
+
+        // Valide la présence d'un chiffre.
+        if(/[0-9]+/.test(mdp)){
+            document.getElementById("MmdpHelpNum").innerHTML = '<div class="infoPassword"><div id="triangleVert"></div><p class="valid_password">1 chiffre.</p></div>';
+        }
+        else{
+            document.getElementById("MmdpHelpNum").innerHTML = '<div class="infoPassword"><div id="triangleGris"></div><p>1 chiffre.</p></div>';
+        }
+
+        // Valide la présence de caractères spéciaux.
+        if(/[!@#$%^&,;*]+/.test(mdp)){
+            document.getElementById("MmdpHelpSpe").innerHTML = '<div class="infoPassword"><div id="triangleVert"></div><p class="valid_password">1 caractère spéciale.</p></div>';
+        }
+        else{
+            document.getElementById("MmdpHelpSpe").innerHTML = '<div class="infoPassword"><div id="triangleGris"></div><p>1 caractère spéciale.</p></div>';
+        }
+
+
+    }, false);
+
+
+}
 
 function InscriptionInfo(){
 
@@ -1451,4 +1502,9 @@ function init(){
 function initInscription(){
     InscriptionInfo();
     validationInscription(2);
+}
+
+function initModifPassword(){
+
+    modificationPassword();
 }

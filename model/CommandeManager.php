@@ -17,13 +17,51 @@ require_once("./class/Commande.php");
 class CommandeManager {
 
 
+
+
+    /**
+     * GetCommandeByUser
+     * retourne le nombre de commandes passer par l'utilisateur en parametre
+     *
+     * @return array
+     */
+    public static function GetNbCommandeByUser($user){
+
+        // Connexion bdd
+        DbManager::getConnexion();
+        // Affichage d'erreur en cas de non connexion à la base de données.
+        if(DbManager::getConnexion() == null ){
+
+            echo 'Erreur de connexion à la bdd.';
+
+        }
+
+        // Récupération du nombre de commandes.
+        $idUser = $user->GetId();
+
+        $sql = "select id nom FROM Commandes WHERE idUser = :id";
+        $resultCommande=DbManager::$cnx->prepare($sql);
+        $resultCommande->bindParam(':id', $idUser, PDO::PARAM_INT);
+        $resultCommande->execute();
+
+
+        //Retourne les commandes de l'utilisateur en parametre
+        return $resultCommande->rowCount();
+
+        
+    }
+
+
+
+
+
     /**
      * GetCommandeByUser
      * retourne les commandes de l'utilisateur en parametre
      *
      * @return array
      */
-    public static function GetCommandeByUser($user){
+    public static function GetCommandeByUser($user,$derniereCommande,$limiteCommande){
 
         // Connexion bdd
         DbManager::getConnexion();
@@ -50,9 +88,11 @@ class CommandeManager {
 
         $idUser = $user->GetId();
 
-        $sql = "select C.id,adresse,ville,cp,idPays,P.libelle,P.abreviation, P.frais, prenom, nom FROM Commandes C JOIN pays P ON P.id = C.idPays WHERE idUser = :id";
+        $sql = "select C.id,adresse,ville,cp,idPays,P.libelle,P.abreviation, P.frais, prenom, nom FROM Commandes C JOIN pays P ON P.id = C.idPays WHERE idUser = :id LIMIT :dernier , :limite";
         $resultCommande=DbManager::$cnx->prepare($sql);
         $resultCommande->bindParam(':id', $idUser, PDO::PARAM_INT);
+        $resultCommande->bindParam(':dernier', $derniereCommande, PDO::PARAM_INT);
+        $resultCommande->bindParam(':limite', $limiteCommande, PDO::PARAM_INT);
         $resultCommande->execute();
 
         //Pour chaque commandes
@@ -141,6 +181,121 @@ class CommandeManager {
 
 
 
+
+
+
+    /**
+     * GetCommandeById
+     * retourne la commande de l'id en parametre
+     *
+     * @return commande
+     */
+    public static function GetCommandeById($id){
+
+        // Connexion bdd
+        DbManager::getConnexion();
+        // Affichage d'erreur en cas de non connexion à la base de données.
+        if(DbManager::getConnexion() == null ){
+
+            echo 'Erreur de connexion à la bdd.';
+
+        }
+
+        //Les commandes retournées
+        $lesCommandes = array();
+
+
+        // =============================================
+        //
+        // Etape 1
+        // Récupération des informations des commandes.
+        //
+        // ==============================================
+
+
+        // Récupération des informations de commande.
+
+        $sql = "select C.id,C.idUser,adresse,ville,cp,idPays,P.libelle,P.abreviation,P.frais,C.prenom AS Cprenom,C.nom AS Cnom,mail,mdp,dateNaissance,dateInscription,U.prenom AS prenomU,U.nom AS nomU FROM Commandes C JOIN pays P ON P.id = C.idPays JOIN utilisateurs U ON C.idUser = U.iduser WHERE C.id = :id";
+        $resultCommande=DbManager::$cnx->prepare($sql);
+        $resultCommande->bindParam(':id', $id, PDO::PARAM_INT);
+        $resultCommande->execute();
+
+        //Pour chaque commandes
+        while($result_commande=$resultCommande->fetch()){
+
+            // =============================================
+            //
+            // Etape 2
+            // Récupération des statuts de chaque commande.
+            //
+            // ==============================================
+            
+            $lesStatuts = array();
+
+
+            //Récupération des statuts de la commande
+            $sql = "select idStatut,date,S.libelle FROM statuts_commandes SC JOIN statut_commande S ON SC.idStatut = S.id WHERE idCommande = :idCommande";
+            $resultStatut=DbManager::$cnx->prepare($sql);
+            $resultStatut->bindParam(':idCommande', $result_commande['id'], PDO::PARAM_INT);
+            $resultStatut->execute();
+
+            //Ajoute tous les statuts de la commande dans un tableau
+            while($result_statut=$resultStatut->fetch()){
+
+                array_push($lesStatuts, [
+                                            'statut' => new statut($result_statut['idStatut'],$result_statut['libelle']),
+                                            'date' => $result_statut['date']
+
+                                        ]);
+
+            }
+
+
+            //Le pays de livraison
+            $lePays = new pays($result_commande['idPays'],$result_commande['libelle'],$result_commande['abreviation'],$result_commande['frais']);
+
+            //Ajoute la commande a la liste des commandes
+            $laCommande = new commande($result_commande['id'],new utilisateur($result_commande['idUser'],$result_commande['nomU'],$result_commande['prenomU'],$result_commande['mail'],$result_commande['mdp'],new DateTime($result_commande['dateInscription']),new DateTime($result_commande['dateNaissance'])),$result_commande['adresse'],$result_commande['ville'],$result_commande['cp'],$lePays,$result_commande['Cnom'],$result_commande['Cprenom'],$lesStatuts);
+            
+        }
+
+        
+
+
+        // =============================================
+        //
+        // Etape 3
+        // Récupération des détails de la commande.
+        //
+        // ==============================================
+
+        //Récupération des produits de la commande:
+
+        //Panier de la commande
+        $lePanier = new panier();
+
+        $sql = "select idProduit,qte FROM details_commande WHERE idCommande = :id";
+        $resultDetails=DbManager::$cnx->prepare($sql);
+        $resultDetails->bindParam(':id', $id, PDO::PARAM_INT);
+        $resultDetails->execute();
+
+        //Ajoute chaque produit au panier
+        while($result_panier=$resultDetails->fetch()){
+            
+            
+            $lePanier->AddProduit(ProduitsManager::getProduitParId($result_panier['idProduit']), $result_panier['qte']);
+
+        }
+
+        //Ajoute le panier a la commande
+        $laCommande->SetDetailsCommande($lePanier);
+
+
+        //Retourne les commandes de l'utilisateur en parametre
+        return $laCommande;
+
+        
+    }
 
 
 
@@ -324,7 +479,7 @@ class CommandeManager {
         }catch(PDOException $e){
 
             $add = false;
-            echo "Syntax Error: ".$e->getMessage();
+            
         }
 
 

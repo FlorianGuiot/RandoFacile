@@ -189,4 +189,99 @@ class UserManager {
 
 
 
+    /**
+     * UpdateUserInfo
+     * Modifie les informations d'un utilisateur en bdd
+     * retourne true si l'utilisateur est modifié
+     * @return bool
+     */
+    public static function UpdateUserInfo($nom,$prenom,$dateNaissance,$email,$id){
+
+        // Connexion bdd
+        DbManager::getConnexion();
+        // Affichage d'erreur en cas de non connexion à la base de données.
+        if(DbManager::getConnexion() == null ){
+
+            echo 'Erreur de connexion à la bdd.';
+
+        }
+
+        $add = true;
+        
+        //update de l'utilisateur dans la base de donnée
+        try{
+
+            $sql="UPDATE utilisateurs SET mail = :mail, dateNaissance = :dateNaissance, prenom = :prenom, nom = :nom WHERE iduser = :iduser";
+
+            $updateUser = DbManager::$cnx->prepare($sql);
+            $updateUser->bindParam(':mail', $email);
+            $updateUser->bindParam(':dateNaissance', $dateNaissance);
+            $updateUser->bindParam(':prenom', $prenom);
+            $updateUser->bindParam(':nom', $nom);
+            $updateUser->bindParam(':iduser', $id);
+
+            // Exécution ! 
+            $updateUser->execute();
+            
+        }catch(PDOException $e){
+
+            $add = false;
+
+        }
+
+
+
+        return $add;
+
+    }
+
+
+
+
+
+    /**
+     * UpdateUserPassword
+     * Modifie le mot de passe d'un utilisateur en bdd
+     * retourne true si l'utilisateur est modifié
+     * @return bool
+     */
+    public static function UpdateUserPassword($password,$id){
+
+        // Connexion bdd
+        DbManager::getConnexion();
+        // Affichage d'erreur en cas de non connexion à la base de données.
+        if(DbManager::getConnexion() == null ){
+
+            echo 'Erreur de connexion à la bdd.';
+
+        }
+
+        $add = true;
+        
+        //update de l'utilisateur dans la base de donnée
+        try{
+
+            $sql="UPDATE utilisateurs SET mdp = :mdp WHERE iduser = :iduser";
+
+            $updateUser = DbManager::$cnx->prepare($sql);
+            $updateUser->bindParam(':mdp', $password);
+            $updateUser->bindParam(':iduser', $id);
+
+            // Exécution ! 
+            $updateUser->execute();
+            
+        }catch(PDOException $e){
+
+            $add = false;
+
+        }
+
+
+
+        return $add;
+
+    }
+
+
+
 }
