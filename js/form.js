@@ -425,7 +425,7 @@ function InscriptionInfo(){
                 document.getElementById("ImdpHelpSpe").innerHTML = '<div class="infoPassword"><div id="triangleGris"></div><p>1 caractère spéciale.</p></div>';
             }
 
-
+            
         }, false);
 
         //Affichage mots de passe identiques.
@@ -517,7 +517,7 @@ function validationInscription(etape){
             if(passValide == true && mailValide == true){
 
                 $.ajax({
-                    url:'index.php?controller=Login&action=inscriptionEtape1',
+                    url: SERVER_URL+'/inscription/1/',
                     type:'post',
                     data:{email:email,password:password,confpassword:confPassword},
                     success:function(response){
@@ -589,7 +589,7 @@ function validationInscription(etape){
 
                 
                 $.ajax({
-                    url:'index.php?controller=Login&action=inscriptionEtape2',
+                    url: SERVER_URL+'/inscription/2 /',
                     type:'post',
                     data:{email:email,password:password,nom:nom,prenom:prenom,dateNaissance:dateNaissance,confpassword:confPassword},
                     success:function(response){
@@ -610,7 +610,7 @@ function validationInscription(etape){
                             welcomMSG = '<div class="col-12"><p class="shake text-success m-2" style="font-size: 2rem">Bienvenue '+prenom+' !</p></div>'+
                                         '<div class="col-12"><i class="fa-solid fa-thumbs-up fa-2xl m-2"></i></div>'+
                                         '<div class="col-12"><p class="m-2">Toute l\'équipe de RandoFacile te souhaite la bienvenue. N\'attends plus pour passer commande !</p></div>'+
-                                        '<div class="col-12"><button name="bouton-accueil" id="bouton-accueil"  value="accueil" class="btn btn-primary" onclick="window.location.href = \'index\';" >Retour à l\'accueil</button></div>';
+                                        '<div class="col-12"><button name="bouton-accueil" id="bouton-accueil"  value="accueil" class="btn btn-primary" onclick="window.location.href = '+SERVER_URL+'/" >Retour à l\'accueil</button></div>';
                                         
                             document.getElementById("register-container").innerHTML = welcomMSG;                             
                         }
@@ -856,7 +856,7 @@ function editButtonCommentaire(){
             if(commentaireValide == true){
                 
                 $.ajax({
-                    url:'index.php?controller=Produit&action=EditCommentaire',
+                    url: SERVER_URL+'/produit/commentaire/edit/',
                     type:'post',
                     data:{commentaire:commentaire,id:id},
                     success:function(response){
@@ -939,7 +939,7 @@ function DeleteButtonCommentaire(){
             /* Supprime le commentaire */
 
             $.ajax({
-                url:'index.php?controller=Produit&action=SupprimerCommentaire',
+                url: SERVER_URL+'/produit/commentaire/delete/',
                 type:'post',
                 data:{id:id},
                 success:function(response){

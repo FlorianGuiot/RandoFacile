@@ -14,7 +14,7 @@ class panier{
     protected float $minFraisLivraison = 50; //Montant minimal pour avoir la livraison gratuite
     protected float $fraisLivraison = 10; //Frais de livraison
 
-    /**
+    /** 
      * Constructeur de panier.
      */
     public function __construct()

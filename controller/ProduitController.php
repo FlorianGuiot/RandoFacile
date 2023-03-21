@@ -174,42 +174,53 @@ class ProduitController{
 
             $user = UserManager::getUserById($_SESSION["iduser"]);
 
-            if(ProduitsManager::EstCommentaireSpam($user,DbManager::nettoyer($_POST["idProduit"]))){
+            if(!ProduitsManager::EstProduitAcheteByUser(DbManager::nettoyer($_POST["idProduit"]),$_SESSION["iduser"])){
 
-                $erreur = "Vous devez attendre avant de resposter un commentaire.";
+                $erreur = "Vous devez avoir commandé cet article avant de laisser un commentaire.";
 
             }else{
 
-                //Verifie la taille du commentaire
-                if(strlen($_POST["commentaire"]) <= 1024){
 
-                    if(isset($_POST["note"]) && $_POST["note"] > 0){
+                if(ProduitsManager::EstCommentaireSpam($user,DbManager::nettoyer($_POST["idProduit"]))){
 
-                        $ipUser = $_SERVER['REMOTE_ADDR']; //Adresse IP de l'utilisateur
-
-                        date_default_timezone_set('Europe/Paris');
-                        $dateDuJour = date('Y-m-d H:i:s', time()); //Date du commentaire
-
-                        //Post le commentaire en BDD
-                        $estAdd = ProduitsManager::AddCommentaire($user,$ipUser,DbManager::nettoyer($_POST["commentaire"]),$dateDuJour,DbManager::nettoyer($_POST["idProduit"]),DbManager::nettoyer($_POST["note"]));
-                        
-                        if(!$estAdd){
-
-                            $erreur = "Un problème est survenu lors de l'ajout du commentaire.";
-                            
-                        }
-
-                    }else{
-                        $erreur = "Vous devez laisser une note.";
-                    }
-                //Message trop long
+                    $erreur = "Vous devez attendre avant de resposter un commentaire.";
+    
                 }else{
-
-                    $erreur = "Votre commentaire est trop long.";
-
+    
+                    //Verifie la taille du commentaire
+                    if(strlen($_POST["commentaire"]) <= 1024){
+    
+                        if(isset($_POST["note"]) && $_POST["note"] > 0){
+    
+                            $ipUser = $_SERVER['REMOTE_ADDR']; //Adresse IP de l'utilisateur
+    
+                            date_default_timezone_set('Europe/Paris');
+                            $dateDuJour = date('Y-m-d H:i:s', time()); //Date du commentaire
+    
+                            //Post le commentaire en BDD
+                            $estAdd = ProduitsManager::AddCommentaire($user,$ipUser,DbManager::nettoyer($_POST["commentaire"]),$dateDuJour,DbManager::nettoyer($_POST["idProduit"]),DbManager::nettoyer($_POST["note"]));
+                            
+                            if(!$estAdd){
+    
+                                $erreur = "Un problème est survenu lors de l'ajout du commentaire.";
+                                
+                            }
+    
+                        }else{
+                            $erreur = "Vous devez laisser une note.";
+                        }
+                    //Message trop long
+                    }else{
+    
+                        $erreur = "Votre commentaire est trop long.";
+    
+                    }
+    
                 }
 
+
             }
+            
             
         //Utilisateur non connecté
         }else{

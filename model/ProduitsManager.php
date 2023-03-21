@@ -578,6 +578,44 @@ class ProduitsManager {
 
 
     /**
+     * EstProduitAcheteByUser
+     * retourne vrai si le produit a été acheté par l'utilisateur
+     *
+     * @return bool
+     */
+    public static function EstProduitAcheteByUser($idProduit,$idUser){
+
+        // Connexion bdd
+        DbManager::getConnexion();
+        // Affichage d'erreur en cas de non connexion à la base de données.
+        if(DbManager::getConnexion() == null ){
+
+            echo 'Erreur de connexion à la bdd.';
+
+        }
+
+        $estAcheter = false;
+
+        // Récupération des commentaires.
+        $sql = "select id FROM commandes C JOIN details_commande D ON D.idCommande = C.id WHERE idProduit = :idProduit AND idUser = :idUser";
+        $resultCommentaire=DbManager::$cnx->prepare($sql);
+        $resultCommentaire->bindParam(':idProduit', $idProduit, PDO::PARAM_INT);
+        $resultCommentaire->bindParam(':idUser', $idUser, PDO::PARAM_INT);
+        $resultCommentaire->execute();
+
+        if($resultCommentaire->rowCount() > 0){
+            $estAcheter = true;
+        }
+
+        return $estAcheter;
+
+        
+    }
+
+
+
+
+    /**
      * EstCommentaireSpam
      * Retourne true si l'utilisateur tente de spammer
      *

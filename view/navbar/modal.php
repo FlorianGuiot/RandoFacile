@@ -82,7 +82,7 @@
         <!--Message d'erreur-->
         <div id="message_erreur_inscription" class="mx-auto text-danger text-center m-2"></div>
 
-        <form id="form-inscription" action="index.php?controller=Login&action=ReadEtape2" method="POST">
+        <form id="form-inscription" action="<?php echo SERVER_URL.'/inscription/'; ?>" method="POST">
           <div class="form-group pb-2 pt-2">
               
               <div class="row">

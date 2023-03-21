@@ -88,7 +88,7 @@ class CommandeManager {
 
         $idUser = $user->GetId();
 
-        $sql = "select C.id,adresse,ville,cp,idPays,P.libelle,P.abreviation, P.frais, prenom, nom FROM Commandes C JOIN pays P ON P.id = C.idPays WHERE idUser = :id LIMIT :dernier , :limite";
+        $sql = "select C.id,adresse,ville,cp,idPays,P.libelle,P.abreviation, P.frais, prenom, nom FROM Commandes C JOIN pays P ON P.id = C.idPays WHERE idUser = :id ORDER BY C.id DESC  LIMIT :dernier , :limite";
         $resultCommande=DbManager::$cnx->prepare($sql);
         $resultCommande->bindParam(':id', $idUser, PDO::PARAM_INT);
         $resultCommande->bindParam(':dernier', $derniereCommande, PDO::PARAM_INT);
@@ -234,7 +234,7 @@ class CommandeManager {
 
 
             //Récupération des statuts de la commande
-            $sql = "select idStatut,date,S.libelle FROM statuts_commandes SC JOIN statut_commande S ON SC.idStatut = S.id WHERE idCommande = :idCommande";
+            $sql = "select idStatut,date,S.libelle FROM statuts_commandes SC JOIN statut_commande S ON SC.idStatut = S.id WHERE idCommande = :idCommande ORDER BY date DESC";
             $resultStatut=DbManager::$cnx->prepare($sql);
             $resultStatut->bindParam(':idCommande', $result_commande['id'], PDO::PARAM_INT);
             $resultStatut->execute();
@@ -473,6 +473,34 @@ class CommandeManager {
 
             // Exécution ! 
             $insertDetails->execute($bindSql);
+
+            
+
+
+
+            // =============================================
+            //
+            // Etape 4
+            // Modifier la quantité en stock des produits
+            //
+            // ==============================================
+           
+            
+            foreach($lePanier as $unP){
+
+                $bindSqlUpdate = array();
+
+                $sql = "UPDATE produit SET qte_stock = (qte_stock - ?) WHERE id = ?";
+
+                array_push($bindSqlUpdate, $unP['qte']);
+                array_push($bindSqlUpdate, $unP['produit']->GetId());
+
+                $updateProduit = DbManager::$cnx->prepare($sql);
+
+                // Exécution ! 
+                $updateProduit->execute($bindSqlUpdate);
+
+            }      
 
 
 

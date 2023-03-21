@@ -9,7 +9,7 @@ require_once(ROOT."/view/navbar/header.php");
 
             <div>
                 <div class="logoInscription">
-                    <a href="index.php"><img src="./img/logo.png" height="80"></a>
+                    <a href="index.php"><img src="<?php echo SERVER_URL.'/img/logo.png'; ?>" height="80"></a>
                 </div>
             </div>
 </div>
@@ -19,7 +19,7 @@ require_once(ROOT."/view/navbar/header.php");
         <div class="row  mx-auto">
             <div id="register-container" class="" style="text-align:center;" >
 
-                <form id="form-inscription" action="index.php?controller=Login&action=inscriptionEtape2" method="POST">
+                <form id="form-inscription" action="<?php echo SERVER_URL.'/inscription/2/'; ?>" method="POST">
 
 
                     <div id='message_erreur_inscription' class="mx-auto text-danger text-center m-2"></div>

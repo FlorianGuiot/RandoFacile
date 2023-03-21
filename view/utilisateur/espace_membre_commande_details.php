@@ -78,14 +78,51 @@ if(!isset($_SESSION['iduser'])){
 
 
                 </div>
-
-
-                
+     
 
             </div>
 
+
+            <div class="shadow mb-5 bg-body rounded p-3 ">
+                
+                <p class="fs-5 mb-3">Historique</p>
+                
+
+                <div class="timeline">
+                <?php
+                
+                $coteGauche = true;
+
+                foreach($laCommande->GetLesStatuts() as $unStatut):
+
+                    if($coteGauche){
+                        echo '<div class="container_timeline left">';
+                        $coteGauche = false;
+                    }else{
+                        echo '<div class="container_timeline right">';
+                        $coteGauche = true;
+                    }
+
+                    $date = new DateTime($unStatut['date']);
+                    echo    '<div class="timeline_content">'.
+                            '<p class="fs-4">'.date_format($date , "d/m/Y").'</p>'.
+                            '<p>'.$unStatut['statut']->GetLibelle().'</p>'.
+                            '</div>'.
+                            '</div>';
+
+
+                endforeach;
+
+                ?>
+                
+
+            </div>
+            </div>
+
+
             <div class="shadow mb-5 bg-body rounded p-3 panier-page-container">
             <p class="fs-5 mb-3">Détails</p>
+            <p class="fs-6 mb-3">Total : <?php  echo NombreFormatter::GetNombreFormatFr($laCommande->GetDetailsCommande()->GetPrixTotal() + $laCommande->GetPays()->GetFrais()) ?> € TTC</p>
             <?php
 
                 foreach($lePanier as $unP):

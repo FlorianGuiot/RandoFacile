@@ -275,6 +275,13 @@ class LoginController{
 
             }else{
 
+                if($_POST['dateNaissance'] == null){
+
+                    $_POST['dateNaissance'] = "0000-00-00";
+
+                }
+                
+                
                 //Update l'utilisateur
 
                 $add = UserManager::UpdateUserInfo($_POST['nom'],$_POST['prenom'],$_POST['dateNaissance'],strtolower($_POST['email']),$userAModifier->GetId());
@@ -334,7 +341,7 @@ class LoginController{
 
             //Update le mot de passe de l'utilisateur
 
-            $add = UserManager::UpdateUserPassword($_POST['password'],$userAModifier->GetId());
+            $add = UserManager::UpdateUserPassword(password_hash($_POST['password'], PASSWORD_BCRYPT),$userAModifier->GetId());
 
             //Si une erreur lors de l'ajout
             if(!$add){

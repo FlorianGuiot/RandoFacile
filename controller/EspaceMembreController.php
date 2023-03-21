@@ -82,23 +82,29 @@ class EspaceMembreController{
         
         // Variables
         $params['page_name'] = "Mes commandes";
-        $user = UserManager::getUserById($_SESSION['iduser']);
-        define('LIMIT_COMMANDES', 5); //nbr max de commandes affichés par page
-        $lienPage = SERVER_URL."/membre/commandes";
-        $nbCommandes = CommandeManager::GetNbCommandeByUser($user);
 
-        //Numero de page par défaut à 1
-        if(!isset($params['numPage'])){
+        if(isset($_SESSION['iduser'])){
 
-            $params['numPage'] = 1;
+            $user = UserManager::getUserById($_SESSION['iduser']);
+            define('LIMIT_COMMANDES', 5); //nbr max de commandes affichés par page
+            $lienPage = SERVER_URL."/membre/commandes";
+            $nbCommandes = CommandeManager::GetNbCommandeByUser($user);
+
+            //Numero de page par défaut à 1
+            if(!isset($params['numPage'])){
+
+                $params['numPage'] = 1;
+
+            }
+
+            //Calcul du premier article de la page
+            $derniereCommande = ($params['numPage'] * LIMIT_COMMANDES) - LIMIT_COMMANDES;
+
+            $lesCommandes = CommandeManager::GetCommandeByUser($user,$derniereCommande,LIMIT_COMMANDES);
+
 
         }
-
-        //Calcul du premier article de la page
-        $derniereCommande = ($params['numPage'] * LIMIT_COMMANDES) - LIMIT_COMMANDES;
-
-        $lesCommandes = CommandeManager::GetCommandeByUser($user,$derniereCommande,LIMIT_COMMANDES);
-
+        
 
         /*
         ====================
