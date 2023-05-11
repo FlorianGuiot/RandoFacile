@@ -208,7 +208,7 @@ if($page['produitExiste'] == true){
                                 </div>
                                 <div class="col-4">
                                     <?php
-                                        if( $produit->GetLesCommentaires()[$i]->EstModifiable()){ echo "<a class='deleteButton' href='#'><i class='fa-solid fa-trash'></i> Supprimer</a>"; }
+                                        if( $produit->GetLesCommentaires()[$i]->EstSupprimable()){ echo "<a class='deleteButton' href='#'><i class='fa-solid fa-trash'></i> Supprimer</a>"; }
                                     ?>
                                 </div>
                                 <div class="col-4 d-flex justify-content-end">

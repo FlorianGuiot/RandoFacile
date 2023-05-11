@@ -136,6 +136,32 @@ class commentaire{
      */
     public function EstModifiable(){
 
+        $estModifiable = false;
+
+        if(isset($_SESSION['iduser'])){
+
+
+            $user = UserManager::getUserById($_SESSION['iduser']);
+
+            if($_SESSION['iduser'] == $this->user->GetId()){
+
+                $estModifiable = true;
+    
+            }
+
+        }
+        
+
+        return $estModifiable;
+
+    }
+
+
+    /**
+     * Retourne true si l'utilisateur peut supprimer le commentaire
+     */
+    public function EstSupprimable(){
+
         $estSupprimable = false;
 
         if(isset($_SESSION['iduser'])){
